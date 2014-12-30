@@ -1,8 +1,8 @@
 GUI_Tools repository created to contain:
-    * Templates
-    * Documentation
-    * Examples
-    * Various Resources
+* Templates
+* Documentation
+* Examples
+* Various Resources
 to support the development of GUI application development for use with 
 neutron scatting and imaging scientific research.
 

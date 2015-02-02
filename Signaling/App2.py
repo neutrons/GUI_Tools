@@ -43,6 +43,7 @@ class App2(QtGui.QMainWindow):
         self.connect(self.ui.pushButtonSignalApp1, QtCore.SIGNAL('clicked()'), self.signalApp1)        
         
         self.mySignal.connect(parent.updateTextEdit) #connect to the updateTextEdit slot defined in app1.py
+        
 
     def signalApp1(self):
         self.parent.ui.text=self.ui.lineEditApp2.text() #place text from this app into the text field used by app1 to update the app1 text edit box
@@ -62,6 +63,11 @@ class App2(QtGui.QMainWindow):
         #do nothing and return
             pass     
 
+    def closeEvent(self,event):
+        self.parent.ui.text=_fromUtf8("Closing App: "+str(self.ui.appCnt)) #place text from this app into the text field used by app1 to update the app1 text edit box
+        sigVal=self.ui.appCnt    #reply with the integer representing this application instance
+        self.mySignal.emit(sigVal)  #send sigval to inform main program which app responded
+        
 
 if __name__=="__main__":
     app = QtGui.QApplication(sys.argv)

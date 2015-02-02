@@ -64,9 +64,14 @@ class App2(QtGui.QMainWindow):
             pass     
 
     def closeEvent(self,event):
+        #Here using an event handler to handle the case when the application is closed where the main app is informed that the child app has closed
+        #Description for events can be found here: http://pyqt.sourceforge.net/Docs/PyQt4/qevent.html
+        #The method name 'closeEvent' is formatted precisely as required in order to handle the application close event
+        #See the QEvent Class Detailed Description for more information
         self.parent.ui.text=_fromUtf8("Closing App: "+str(self.ui.appCnt)) #place text from this app into the text field used by app1 to update the app1 text edit box
         sigVal=self.ui.appCnt    #reply with the integer representing this application instance
         self.mySignal.emit(sigVal)  #send sigval to inform main program which app responded
+        
         
 
 if __name__=="__main__":

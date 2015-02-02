@@ -1,0 +1,22 @@
+<!DOCTYPE RCC><RCC version="1.0"> 
+  <qresource prefix="PNG Files">
+    <file>resources/Riverbank_logo.png</file>
+    <file>resources/Qt_logo.png</file>
+    <file>resources/python-logo.png</file>
+    <file>resources/fastforward1.png</file>
+    <file>resources/pause1.png</file>
+    <file>resources/play2.png</file>
+    <file>resources/stop2.png</file>
+    <file>resources/timer1.png</file>    
+  </qresource>
+  <qresource prefix="JPEG Files">
+    <file>resources/calendar.jpg</file>
+    <file>resources/clock1.jpg</file>
+    <file>resources/clock2.jpg</file>
+    <file>resources/fastforward2.jpg</file>
+    <file>resources/fit1.jpg</file>
+    <file>resources/pause2.jpg</file>
+    <file>resources/play1.jpg</file>
+    <file>resources/stop1.jpg</file>    
+  </qresource>  
+</RCC>

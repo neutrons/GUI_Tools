@@ -38,6 +38,7 @@ class App1(QtGui.QMainWindow):
     
         #add action exit for File --> Exit menu option
         self.connect(self.ui.actionExit, QtCore.SIGNAL('triggered()'), self.confirmExit)
+
         #add signal/slot connection for pushbutton exit request
         self.connect(self.ui.pushButtonLaunchApp2, QtCore.SIGNAL('clicked()'), self.launchApp2)
         self.connect(self.ui.pushButtonUpdate, QtCore.SIGNAL('clicked()'), self.updateLocal)        
@@ -66,7 +67,7 @@ class App1(QtGui.QMainWindow):
         prepend="App"+str(val)+": " #create an app identifier based upon the returned integer
         self.ui.textEditDisplayText.append(prepend+self.ui.text) #update app1 text edit box
 
-        
+
     def confirmExit(self):
         reply = QtGui.QMessageBox.question(self, 'Message',
         "Are you sure to quit?", QtGui.QMessageBox.Yes | 
@@ -79,9 +80,21 @@ class App1(QtGui.QMainWindow):
         #do nothing and return
             pass     
 
+    def exit(self):
+        print 'in exit'
+
     def closeEvent(self, event=None):
-        # always executed when leaving application
-        print "whatever you do to me here... I am going to quit anyway!"
+        # triggered when user exit application using top corner button (exit button)
+        reply = QtGui.QMessageBox.question(self, 'Message',
+                                           "Are you sure to quit?", QtGui.QMessageBox.Yes | 
+                                           QtGui.QMessageBox.No, QtGui.QMessageBox.No)
+    
+        if reply == QtGui.QMessageBox.Yes:
+        #close application
+            event.accept()
+        else:
+        #do nothing and return
+            event.ignore()
 
 if __name__=="__main__":
     app = QtGui.QApplication(sys.argv)

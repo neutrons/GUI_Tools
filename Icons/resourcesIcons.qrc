@@ -8,6 +8,13 @@
     <file>resources/play2.png</file>
     <file>resources/stop2.png</file>
     <file>resources/timer1.png</file>    
+    <file>resources/document-open.png</file>    
+    <file>resources/document-print.png</file>    
+    <file>resources/document-save.png</file>    
+    <file>resources/export_ascii.png</file>    
+    <file>resources/go-home.png</file>    
+    <file>resources/toggle-xlog.png</file>    
+    <file>resources/toggle-ylog.png</file>    
   </qresource>
   <qresource prefix="JPEG Files">
     <file>resources/calendar.jpg</file>

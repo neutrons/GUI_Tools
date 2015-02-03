@@ -79,6 +79,9 @@ class App1(QtGui.QMainWindow):
         #do nothing and return
             pass     
 
+    def closeEvent(self, event=None):
+        # always executed when leaving application
+        print "whatever you do to me here... I am going to quit anyway!"
 
 if __name__=="__main__":
     app = QtGui.QApplication(sys.argv)

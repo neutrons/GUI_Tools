@@ -10,7 +10,7 @@ import unittest
 # make sure this path is used on imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from tests import test_suites
+from unitTestFolder import test_suites
 
 suite=unittest.TestSuite(test_suites.values())
 

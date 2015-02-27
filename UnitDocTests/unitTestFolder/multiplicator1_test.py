@@ -10,8 +10,7 @@ class TestMultiplicator1(unittest.TestCase):
         multi1 = Multiplicator([3,4],2)
         self.assertEqual(multi1.result, [6,8])
         
-#if __name__ == '__main__':
-    #unittest.main()
+if __name__ == '__main__':
+    unittest.main()
     
-suite=unittest.TestLoader().loadTestsFromTestCase(TestMultiplicator1)
     

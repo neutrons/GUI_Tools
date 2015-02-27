@@ -41,7 +41,6 @@ class Multiplicator(object):
             self.result = None
             return
             
-        
         try:
             if isinstance(arg1, list):
                 

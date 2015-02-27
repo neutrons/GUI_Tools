@@ -10,10 +10,12 @@ class TestMultiplicator(unittest.TestCase):
         multi1 = Multiplicator([3,4],2)
         self.assertEqual(multi1.result, [6,8])
         
-
     def test_list_by_list(self):
         multi2 = Multiplicator([3,4],[10,11])
         self.assertEqual(multi2.result, [30,44])
+        
+    def test_missing_one_argument_exception_thrown(self):
+        self.assertRaises(TypeError, Multiplicator([10,11]))
 
 if __name__ == '__main__':
     unittest.main()

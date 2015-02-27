@@ -11,6 +11,6 @@ test_suites={}
 
 # read all test modules and collect their test suites
 for module_name in test_modules:
-  test_module=__import__('unitTestFolder.'+module_name, fromlist=[module_name])
+  test_module=__import__('unitTestSuiteFolder.'+module_name, fromlist=[module_name])
   if 'suite' in test_module.__dict__:
     test_suites[module_name]=test_module.suite

@@ -6,6 +6,42 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from matplotlib.figure import Figure
 
+MplLineStyles = ['-' , '--' , '-.' , ':' , 'None' , ' ' , '']
+MplLineMarkers = [ ". (point)",
+        ", (pixel         )",
+        "o (circle        )",
+        "v (triangle_down )",
+        "^ (triangle_up   )",
+        "< (triangle_left )",
+        "> (triangle_right)",
+        "1 (tri_down      )",
+        "2 (tri_up        )",
+        "3 (tri_left      )",
+        "4 (tri_right     )",
+        "8 (octagon       )",
+        "s (square        )",
+        "p (pentagon      )",
+        "* (star          )",
+        "h (hexagon1      )",
+        "H (hexagon2      )",
+        "+ (plus          )",
+        "x (x             )",
+        "D (diamond       )",
+        "d (thin_diamond  )",
+        "| (vline         )",
+        "_ (hline         )",
+        "None (nothing    )"]
+
+MplBasicColors = [
+        "blue",
+        "green",
+        "red",
+        "cyan",
+        "magenta",
+        "yellow",
+        "black",
+        "white"]
+
 class Qt4MplCanvas(FigureCanvas):
     """  A customized Qt widget for matplotlib figure.
     It can be used to replace GraphicsView of QtGui
@@ -45,6 +81,11 @@ class Qt4MplCanvas(FigureCanvas):
         # color must be RGBA (4-tuple)
         r = self.axes.plot(x, y, color=(0,1,0,1), marker='o', linestyle='--',
                 label='X???X', linewidth=2) # return: list of matplotlib.lines.Line2D object
+
+        # set label
+        self.axes.set_xlabel(r"$2\theta$", fontsize=20)  
+
+        # set/update legend
         self.axes.legend()
 
         # Register
@@ -82,8 +123,7 @@ class Qt4MplCanvas(FigureCanvas):
 
         return
 
-
-    def updateLine(self, ikey, vecx, vecy, color):
+    def updateLine(self, ikey, vecx, vecy, linestyle=None, linecolor=None, marker=None, markercolor=None):
         """
         """
         line = self._lineDict[ikey]
@@ -92,7 +132,37 @@ class Qt4MplCanvas(FigureCanvas):
             line.set_xdata(vecx)
             line.set_ydata(vecy)
 
-        if color is not None:
-            line.set_color(color)
+        if linecolor is not None:
+            line.set_color(linecolor)
+
+        if linestyle is not None:
+            line.set_linestyle(linestyle)
+
+        if marker is not None:
+            line.set_marker(marker)
+
+        if markercolor is not None:
+            line.set_markerfacecolor(markercolor)
+
+        oldlabel = line.get_label()
+        line.set_label(oldlabel)
+
+        self.axes.legend()
 
         return
+
+    def getLineStyleList(self):
+        """
+        """
+        return MplLineStyles
+
+
+    def getLineMarkerList(self):
+        """
+        """
+        return MplLineMarkers
+
+    def getLineBasicColorList(self):
+        """
+        """
+        return MplBasicColors 

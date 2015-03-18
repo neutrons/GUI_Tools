@@ -14,7 +14,7 @@ except AttributeError:
     def _fromUtf8(s):
         return s 
 
-from MplFigureCanvas import Qt4MplCanvas
+from MplFigureCanvas import Qt4MplPlotView
 
 # from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 # from matplotlib.backends.backend_qt4 import NavigationToolbar2QT as NavigationToolbar
@@ -38,7 +38,7 @@ class MainApp1Dextent(QtGui.QWidget):
         self.resize(800,600)
 
         # - functional widget
-        self.ui_canvas = Qt4MplCanvas(self)
+        self.ui_canvas = Qt4MplPlotView(self)
         self.ui_lineEdit1 = QtGui.QLineEdit(self)
         self.ui_button1 = QtGui.QPushButton(self)
         self.ui_button1.setText("Add Line")

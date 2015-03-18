@@ -7,9 +7,12 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as Naviga
 from matplotlib.figure import Figure
 
 MplLineStyles = ['-' , '--' , '-.' , ':' , 'None' , ' ' , '']
-MplLineMarkers = [ ". (point)",
-        ", (pixel         )",
+MplLineMarkers = [
         "o (circle        )",
+        "s (square        )",
+        "D (diamond       )",
+        ", (pixel         )",
+        ". (point         )",
         "v (triangle_down )",
         "^ (triangle_up   )",
         "< (triangle_left )",
@@ -19,28 +22,104 @@ MplLineMarkers = [ ". (point)",
         "3 (tri_left      )",
         "4 (tri_right     )",
         "8 (octagon       )",
-        "s (square        )",
         "p (pentagon      )",
         "* (star          )",
         "h (hexagon1      )",
         "H (hexagon2      )",
         "+ (plus          )",
         "x (x             )",
-        "D (diamond       )",
         "d (thin_diamond  )",
         "| (vline         )",
         "_ (hline         )",
         "None (nothing    )"]
 
 MplBasicColors = [
+        "black",
+        "red",
         "blue",
         "green",
-        "red",
         "cyan",
         "magenta",
         "yellow",
-        "black",
         "white"]
+        
+        
+class Qt4MplPlotView(QtGui.QWidget):
+    """ A combined graphics view including matplotlib canvas and 
+    a navigation tool bar
+    """
+    def __init__(self, parent):
+        """ Initialization
+        """
+        # instantianize parent
+        QtGui.QWidget.__init__(self, parent)
+        
+        # set up canvas
+        self.canvas = Qt4MplCanvas(self)
+        self.toolbar = MyNavigationToolbar(self.canvas, self.canvas)
+        
+        # set up layout
+        self.vbox = QtGui.QVBoxLayout(self)
+        self.vbox.addWidget(self.canvas)
+        self.vbox.addWidget(self.toolbar)
+        
+        return
+        
+    def addPlot(self, x, y, color=None, label="", xlabel=None, ylabel=None, marker=None, linestyle=None, linewidth=1):
+        """ Add a new plot
+        """
+        self.canvas.addPlot(x, y, color, label, xlabel, ylabel, marker, linestyle, linewidth)
+        
+        return
+        
+    def draw(self):
+        """ Draw to commit the change
+        """
+        return self.canvas.draw()
+
+    def getPlot(self):
+        """
+        """
+        return self.canvas.getPlot()
+        
+    def getLastPlotIndexKey(self):
+        """ Get ...
+        """
+        return self.canvas.getLastPlotIndexKey()
+        
+    def removePlot(self, ikey):
+        """
+        """
+        return self.canvas.removePlot(ikey)
+        
+    def updateLine(self, ikey, vecx, vecy, linestyle=None, linecolor=None, marker=None, markercolor=None):
+        """
+        """
+        return self.canvas.updateLine(ikey, vecx, vecy, linestyle, linecolor, marker, markercolor)
+
+
+    def getLineStyleList(self):
+        """
+        """
+        return MplLineStyles
+
+
+    def getLineMarkerList(self):
+        """
+        """
+        return MplLineMarkers
+
+    def getLineBasicColorList(self):
+        """
+        """
+        return MplBasicColors 
+        
+    def getDefaultColorMarkerComboList(self):
+        """ Get a list of line/marker color and marker style combination 
+        as default to add more and more line to plot
+        """
+        return self.canvas.getDefaultColorMarkerComboList()
+
 
 class Qt4MplCanvas(FigureCanvas):
     """  A customized Qt widget for matplotlib figure.
@@ -69,21 +148,32 @@ class Qt4MplCanvas(FigureCanvas):
 
         return
 
-    def addPlot(self, x, y):
+    def addPlot(self, x, y, color=None, label="", xlabel=None, ylabel=None, marker=None, linestyle=None, linewidth=1):
         """ Plot a set of data
         Argument:
         - x: numpy array X
         - y: numpy array Y
         """
+        # process inputs and defaults
         self.x = x
         self.y = y
-
+        
+        if color is None:
+            color = (0,1,0,1)
+        if marker is None:
+            marker = 'o'
+        if linestyle is None:
+            linestyle = '-'
+            
         # color must be RGBA (4-tuple)
-        r = self.axes.plot(x, y, color=(0,1,0,1), marker='o', linestyle='--',
-                label='X???X', linewidth=2) # return: list of matplotlib.lines.Line2D object
+        r = self.axes.plot(x, y, color=color, marker=marker, linestyle=linestyle,
+                label=label, linewidth=1) # return: list of matplotlib.lines.Line2D object
 
-        # set label
-        self.axes.set_xlabel(r"$2\theta$", fontsize=20)  
+        # set x-axis and y-axis label
+        if xlabel is not None:
+            self.axes.set_xlabel(xlabel, fontsize=20)  
+        if ylabel is not None:
+            self.axes.set_ylabel(ylabel, fontsize=20)
 
         # set/update legend
         self.axes.legend()
@@ -166,3 +256,43 @@ class Qt4MplCanvas(FigureCanvas):
         """
         """
         return MplBasicColors 
+        
+    def getDefaultColorMarkerComboList(self):
+        """ Get a list of line/marker color and marker style combination 
+        as default to add more and more line to plot
+        """
+        combolist = []
+        nummarkers = len(MplLineMarkers)
+        numcolors = len(MplBasicColors)
+        
+        for i in xrange(nummarkers):
+            marker = MplLineMarkers[i]
+            for j in xrange(numcolors):
+                color = MplBasicColors[j]
+                combolist.append( (marker, color) )
+            # ENDFOR (j)
+        # ENDFOR(i)
+        
+        return combolist
+
+
+class MyNavigationToolbar(NavigationToolbar):
+    """ A customized navigation tool bar attached to canvas
+    """
+    def __init__(self, parent, canvas, direction='h'):
+        """ Initialization
+        """
+        self.canvas = canvas
+        QtGui.QWidget.__init__(self, parent)
+
+        #if direction=='h' :
+        #    self.layout = QtGui.QHBoxLayout(self)
+        #else :
+        #    self.layout = QtGui.QVBoxLayout(self)
+
+        #self.layout.setMargin(2)
+        #self.layout.setSpacing(0)
+
+        NavigationToolbar.__init__( self, canvas, canvas )
+
+        return

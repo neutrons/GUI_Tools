@@ -71,6 +71,11 @@ class Qt4MplPlotView(QtGui.QWidget):
         self.canvas.addPlot(x, y, color, label, xlabel, ylabel, marker, linestyle, linewidth)
         
         return
+
+    def clearAllLines(self):
+        """
+        """
+        self.canvas.clearAllLines()
         
     def draw(self):
         """ Draw to commit the change
@@ -185,6 +190,24 @@ class Qt4MplCanvas(FigureCanvas):
             print "Impoooooooooooooooosible!"
         self._lineIndex += 1
 
+        # Flush/commit
+        self.draw()
+
+        return
+        
+    def clearAllLines(self):
+        """ Remove all lines from the canvas
+        """
+        for ikey in self._lineDict.keys():
+            plot = self._lineDict[ikey]
+            if plot is not None:
+                self.axes.lines.remove(plot)
+                self._lineDict[ikey] = None
+            # ENDIF(plot)
+        # ENDFOR
+        
+        self.draw()
+
         return
 
     def getLastPlotIndexKey(self):
@@ -238,6 +261,9 @@ class Qt4MplCanvas(FigureCanvas):
         line.set_label(oldlabel)
 
         self.axes.legend()
+
+        # commit
+        self.draw()
 
         return
 

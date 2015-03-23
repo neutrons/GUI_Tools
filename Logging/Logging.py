@@ -3,6 +3,8 @@
 """
 Logging.py
 
+S. Miller  20Mar15
+
 Example GUI to introduce utilizing logging for a main GUI application plus
 including child apps it may create.
 
@@ -135,10 +137,7 @@ class LoggingMain(QtGui.QMainWindow):
         self.connect(self.ui.actionExit, QtCore.SIGNAL('triggered()'), self.confirmExit)
         #add signal/slot connection for pushbutton exit request
         self.connect(self.ui.pushButtonExit, QtCore.SIGNAL('released()'), self.confirmExit)
-        
-        Log=logging.getLogger('MainApp_Init')
-        Log.info("LoggingMain Initialized")
-                
+                        
         #define button callbacks
         self.connect(self.ui.pushButtonDebug, QtCore.SIGNAL('released()'), self.Debug)
         self.connect(self.ui.pushButtonInfo, QtCore.SIGNAL('released()'), self.Info)
@@ -149,6 +148,9 @@ class LoggingMain(QtGui.QMainWindow):
         self.connect(self.ui.pushButtonAll, QtCore.SIGNAL('released()'), self.LogAll)        
         self.connect(self.ui.pushButtonLaunchChildApp, QtCore.SIGNAL('released()'), self.LaunchChildApp)
         
+        Log=logging.getLogger('MainApp_Init')
+        Log.info("LoggingMain Initialized")
+        
     #setup the callbacks for each button in the main application.
     #To illustrate how fine grained logging can be, each callback has been
     #given its own logger.
@@ -156,6 +158,17 @@ class LoggingMain(QtGui.QMainWindow):
         LogDebug.debug("Debug button pressed")
     def Info(self):
         LogInfo.info("Info button pressed")
+        LogInfo.info(" Incorporating variables into the log: ")
+        Astr = 'String Variable named Astr'
+        LogInfo.info(" A string: %s",Astr)
+        Aflt = 3.456
+        LogInfo.info(" A floating point variable: %f",Aflt)
+        LogInfo.info(" A floating point variable limited to two decimal places - with rounding: %.2f", Aflt)
+        C=3.1415
+        Alst = ['A',1234,C]
+        LogInfo.info(" A list: %s",str(Alst))
+        #Now limit floats to 2 decimal places in the list:
+        LogInfo.info(" A list limiting floats to 2 decimal places: %s",str([a if type(a) is not float else float('%.2f' % a) for a in Alst]))
     def Warning(self):
         LogWarning.warning("Warning button pressed")
     def Error(self):
@@ -194,16 +207,22 @@ class LoggingMain(QtGui.QMainWindow):
         
         
     def confirmExit(self):
+        #case where user is asked to confirm exiting application
         reply = QtGui.QMessageBox.question(self, 'Message',
         "Are you sure to quit?", QtGui.QMessageBox.Yes | 
         QtGui.QMessageBox.No, QtGui.QMessageBox.No)
         
         if reply == QtGui.QMessageBox.Yes:
-        #close application
+            #close application
+            Log.info("Closing Main Application")
             self.close()
         else:
-        #do nothing and return
+            #do nothing and return
             pass     
+            
+    def closeEvent(self,event):
+        #case where user hits 'X' on GUI to close it
+        Log.info("Forced Closing of Main Application")
     
 if __name__=="__main__":
     app = QtGui.QApplication(sys.argv)

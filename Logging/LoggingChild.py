@@ -3,6 +3,8 @@
 """
 LoggingChild.py
 
+S. Miller 20Mar15
+
 This application instantiated via the Logging.py main application.  The intent 
 here is to illustrate how lean and straightforward it is to extend logging into
 child applications by taking advantage of the global scope of logging within
@@ -38,6 +40,12 @@ Log=logging.getLogger('ChildApp')
 #Notice in this case that only one logger is used for the child application
 #though the developer can embed geographic information into the log message
 #if so desired.
+#It would also be possible to create additional loggers here such as:
+#Log2=logging.getLogger('ChildApp2')
+#noting that ChildApp2 would need to be defined in the logging.conf file - 
+#howver ChildApp2 is not currently defined there.  Just indicating how additional
+#loggers could be defined and initialized.
+
 #Put initial entries in logs for the child app
 Log.critical("*************************************************************")
 Log.critical("Child App - New Log Entry")
@@ -57,9 +65,6 @@ class LoggingChild(QtGui.QMainWindow):
         self.connect(self.ui.actionExit, QtCore.SIGNAL('triggered()'), self.confirmExit)
         #add signal/slot connection for pushbutton exit request
         self.connect(self.ui.pushButtonExit, QtCore.SIGNAL('released()'), self.confirmExit)
-        
-        Log=logging.getLogger('MainApp_Init')
-        Log.info("LoggingMain Initialized")
                 
         #define button callbacks
         self.connect(self.ui.pushButtonDebug, QtCore.SIGNAL('released()'), self.Debug)
@@ -68,7 +73,10 @@ class LoggingChild(QtGui.QMainWindow):
         self.connect(self.ui.pushButtonError, QtCore.SIGNAL('released()'), self.Error)
         self.connect(self.ui.pushButtonCritical, QtCore.SIGNAL('released()'), self.Critical)
         self.connect(self.ui.pushButtonException, QtCore.SIGNAL('released()'), self.Exception)
-        self.connect(self.ui.pushButtonAll, QtCore.SIGNAL('released()'), self.LogAll)        
+        self.connect(self.ui.pushButtonAll, QtCore.SIGNAL('released()'), self.LogAll)      
+        
+        #use the Log defined via the getLogger above determined prior to initializing this object
+        Log.info("LoggingChild Initialized")  
         
     #define callbacks for the child app buttons
     def Debug(self):
@@ -104,14 +112,19 @@ class LoggingChild(QtGui.QMainWindow):
         
         
     def confirmExit(self):
+        #case where user is asked to confirm exiting application
         reply = QtGui.QMessageBox.question(self, 'Message',
         "Are you sure to quit?", QtGui.QMessageBox.Yes | 
         QtGui.QMessageBox.No, QtGui.QMessageBox.No)
         
         if reply == QtGui.QMessageBox.Yes:
-        #close application
+            #close application
+            Log.info("Closing Child Application")
             self.close()
         else:
-        #do nothing and return
+            #do nothing and return
             pass     
     
+    def closeEvent(self,event):
+        #case where user hits 'X' on GUI to close it
+        Log.info("Forced Closing of Child Application")

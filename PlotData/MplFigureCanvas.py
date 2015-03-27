@@ -76,12 +76,12 @@ class Qt4MplPlotView(QtGui.QWidget):
         return
 
 
-    def addPlot2D(self, array2d, xmin, xmax, ymin, ymax, holdprev=True):
+    def addPlot2D(self, array2d, xmin, xmax, ymin, ymax, holdprev=True, yticklabels=None):
         """ Plot a 2D image
         Arguments
          - array2d :: numpy 2D array
         """
-        self.canvas.addPlot2D(array2d, xmin, xmax, ymin, ymax, holdprev)
+        self.canvas.addPlot2D(array2d, xmin, xmax, ymin, ymax, holdprev, yticklabels)
 
         return
 
@@ -216,6 +216,8 @@ class Qt4MplCanvas(FigureCanvas):
         r = self.axes.plot(x, y, color=color, marker=marker, linestyle=linestyle,
                 label=label, linewidth=1) # return: list of matplotlib.lines.Line2D object
 
+        self.axes.set_aspect('auto')
+
         # set x-axis and y-axis label
         if xlabel is not None:
             self.axes.set_xlabel(xlabel, fontsize=20)  
@@ -238,14 +240,28 @@ class Qt4MplCanvas(FigureCanvas):
         return
 
 
-    def addPlot2D(self, array2d, xmin, xmax, ymin, ymax, holdprev):
+    def addPlot2D(self, array2d, xmin, xmax, ymin, ymax, holdprev, yticklabels=None):
         """ Add a 2D plot
+
+        Arguments:
+         - yticklabels :: list of string for y ticks
         """
         # Release the current image
         self.axes.hold(holdprev)
 
         # Do plot
-        imgplot = self.axes.imshow(array2d, extent=[xmin,xmax,ymin,ymax])
+        # y ticks will be shown on line 1, 4, 23, 24 and 30 
+        # yticks = [1, 4, 23, 24, 30]
+        # self.axes.set_yticks(yticks)
+
+        # show image
+        imgplot = self.axes.imshow(array2d, extent=[xmin,xmax,ymin,ymax], interpolation='none')
+        # set y ticks as an option: 
+        if yticklabels is not None: 
+            # it will always label the first N ticks even image is zoomed in
+            self.axes.set_yticklabels(yticklabels)
+        # explicitly set aspect ratio of the image
+        self.axes.set_aspect('auto')
 
         # Set color bar.  plt.colorbar() does not work!
         if self.colorbar is None:

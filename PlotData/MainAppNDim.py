@@ -138,7 +138,7 @@ class MainAppNDim(QtGui.QMainWindow):
         Can specify input as (number of line), x0, dx, xf, x1, x2, x3, ....
         """
         def gauss(vecx, x0, s):
-            """
+            """ A Gaussian 
             """
             listy = []
             for i in xrange(len(vecx)):
@@ -148,16 +148,11 @@ class MainAppNDim(QtGui.QMainWindow):
             vecy = numpy.array(listy)
 
             return vecy
-
-        
-        # dim2array = np.array([[1000, 40, 100], [500, 400, 200]])
-        # print "Change figure to: ", dim2array
-
        
         listx = []
         x0 = 0
         xf = 100
-        dx = 0.1
+        dx = 0.01
         x = 0
         while x < xf:
             listx.append(x)
@@ -168,11 +163,11 @@ class MainAppNDim(QtGui.QMainWindow):
         vecy3 = gauss(vecx, 60, 10)
         vecy4 = gauss(vecx, 80, 60)
         vecy5 = gauss(vecx, 90, 60) + gauss(vecx, 10, 20)
-        # vecy1 = 5*math.exp(-2*(vecx-20)**2)
-        # vecy2 = 5*math.exp(-2*(vecx-40)**2)
         dim2array = numpy.array([vecy1, vecy2, vecy3, vecy4, vecy5])
 
-        self.ui.canvas.addPlot2D(dim2array, xmin=x0, xmax=xf, ymin=0, ymax=100, holdprev=True)
+        yticklabels = ['a', 'b', 'c', 'd', 'e']
+        holdprev=True
+        self.ui.canvas.addPlot2D(dim2array, xmin=x0, xmax=xf, ymin=0, ymax=4+1, holdprev=True, yticklabels=yticklabels)
 
         return
 

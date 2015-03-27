@@ -93,8 +93,12 @@ class QtMplCanvas2D(FigureCanvas):
         """ A dirty hack to flush the image
         """
         w, h = self.get_width_height()
-        self.resize(w+1,h)
-        self.resize(w,h)
+        if True:
+            self.resize(w+1,h)
+            self.resize(w,h)
+        else:
+            # not useful
+            plt.draw()
 
 
 class MyNavigationToolbar(NavigationToolbar):

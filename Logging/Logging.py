@@ -169,6 +169,8 @@ class LoggingMain(QtGui.QMainWindow):
         LogInfo.info(" A list: %s",str(Alst))
         #Now limit floats to 2 decimal places in the list:
         LogInfo.info(" A list limiting floats to 2 decimal places: %s",str([a if type(a) is not float else float('%.2f' % a) for a in Alst]))
+        self.ui.statusbar.showMessage("This message shows up in the statusbar")
+        
     def Warning(self):
         LogWarning.warning("Warning button pressed")
     def Error(self):

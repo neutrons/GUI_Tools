@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ###############################################################################
 #
 # Main Application for 1D Image
@@ -87,6 +88,10 @@ class MainApp1Dextent(QtGui.QWidget):
         self.connect(self.ui_button3, QtCore.SIGNAL('clicked()'),
                 self.doChangeLine)
 
+        # define event handlers for matplotlib canvas
+        self.ui_canvas.canvas.mpl_connect('button_press_event', self.on_mouseDownEvent)
+
+        self.ui_canvas.canvas.mpl_connect('motion_notify_event', self.on_mouseMotion)
         return
 
     def doDeleteLine(self):
@@ -195,6 +200,23 @@ class MainApp1Dextent(QtGui.QWidget):
 
         # Draw !
         self.ui_canvas.draw()
+
+    def on_mouseDownEvent(self, event):
+        """ Respond to pick up a value with mouse down event
+        """
+        x = event.xdata
+        y = event.ydata
+
+        if x is not None and y is not None:
+            msg = "You've clicked on a bar with coords:\n %f, %f" % (x, y)
+            QtGui.QMessageBox.information(self, "Click!", msg)
+
+        return
+
+    def on_mouseMotion(self, event):
+        """
+        """
+        print "Mouse is moving to ", event.xdata, event.ydata
 
 
 if __name__ == "__main__":

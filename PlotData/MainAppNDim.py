@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ###############################################################################
 #
 # Main Application for both 1D and 2D Image
@@ -57,6 +58,10 @@ class MainAppNDim(QtGui.QMainWindow):
         self.ui.comboBox_lineStyle.addItems(self.ui.canvas.getLineStyleList())
         self.ui.comboBox_color.addItems(self.ui.canvas.getLineBasicColorList())
         self.ui.comboBox_marker.addItems(self.ui.canvas.getLineMarkerList())
+
+        # define event handlers for matplotlib canvas
+        self.ui.canvas.canvas.mpl_connect('button_press_event', self.on_mouseDownEvent)
+        self.ui.canvas.canvas.mpl_connect('motion_notify_event', self.on_mouseMotion)
 
         return
 
@@ -273,6 +278,68 @@ class MainAppNDim(QtGui.QMainWindow):
             maxy = None
 
         self.ui.canvas.setXYLimits(minx, maxx, miny, maxy)
+
+        return
+
+    def on_mouseDownEvent(self, event):
+        """ Respond to pick up a value with mouse down event
+        Definition of button_press_event is:
+          button_press_event(x, y, button, dblclick=False, guiEvent=None)
+        Thus event has x, y and button.
+
+        event.button has 3 values:
+         1: left
+         2: middle
+         3: right
+        """
+        x = event.xdata
+        y = event.ydata
+        button = event.button
+        
+
+        if x is not None and y is not None:
+
+            if button == 1:
+                msg = "You've clicked on a bar with coords:\n %f, %f\n and button %d" % (x, y, button)
+                QtGui.QMessageBox.information(self, "Click!", msg)
+
+            elif button == 3:
+                # right click of mouse will pop up a context-menu
+                self.ui.menu = QtGui.QMenu(self) 
+
+                addAction = QtGui.QAction('Add', self) 
+                addAction.triggered.connect(self.addSomething) 
+                self.ui.menu.addAction(addAction)
+
+                rmAction = QtGui.QAction('Remove', self) 
+                rmAction.triggered.connect(self.rmSomething) 
+                self.ui.menu.addAction(rmAction) 
+                
+                # add other required actions 
+                self.ui.menu.popup(QtGui.QCursor.pos())
+
+        return
+
+    def on_mouseMotion(self, event):
+        """
+        """
+        # print "Mouse is moving to ", event.xdata, event.ydata
+
+        return
+
+
+    def addSomething(self):
+        """
+        """
+        print "Add something?"
+
+        return
+
+
+    def rmSomething(self):
+        """
+        """
+        print "Remove something?"
 
         return
 

@@ -159,6 +159,11 @@ class Template2DMainWindow(QtGui.QWidget):
         self.connect(self.buttonPlot, QtCore.SIGNAL('clicked()'), self.doChangeFigure)
         self.connect(self.buttonClear, QtCore.SIGNAL('clicked()'), self.doClearFigure)
 
+        # matplotlib canvas event handling
+        self.canvas.canvas.mpl_connect('button_press_event', self.on_mouseDownEvent)
+        self.canvas.canvas.mpl_connect('motion_notify_event', self.on_mouseMotion)
+
+
 
         ###########SAVING FIGURE TO CLIPBOARD##########
         self.cb = None #will be used for the clipboard
@@ -240,6 +245,23 @@ class Template2DMainWindow(QtGui.QWidget):
             errorMsg = "Sorry: %s\n\n:%s\n"%(sys.exc_type, sys.exc_value)
             print errorMsg
 
+
+    def on_mouseDownEvent(self, event):
+        """ Respond to pick up a value with mouse down event
+        """
+        x = event.xdata
+        y = event.ydata
+
+        if x is not None and y is not None:
+            msg = "You've clicked on a bar with coords:\n %f, %f" % (x, y)
+            QtGui.QMessageBox.information(self, "Click!", msg)
+
+        return
+
+    def on_mouseMotion(self, event):
+        """
+        """
+        print "Mouse is moving to ", event.xdata, event.ydata
 
 
 

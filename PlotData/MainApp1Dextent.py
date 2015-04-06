@@ -58,7 +58,10 @@ class MainApp1Dextent(QtGui.QWidget):
 
         self.ui_combobox_marker = QtGui.QComboBox(self)
         self.ui_combobox_marker.addItems(self.ui_canvas.getLineMarkerList())
-
+        
+        self.ui_checkbox1 = QtGui.QCheckBox(self)
+        self.ui_checkbox1.setObjectName(_fromUtf8("ui_checkbox1"))
+        self.ui_checkbox1.setText('Enable position tracker')
 
         # - layout
         self.ui_hbox = QtGui.QHBoxLayout(self)
@@ -77,6 +80,7 @@ class MainApp1Dextent(QtGui.QWidget):
         self.ui_vbox_ctrl.addWidget(self.ui_combobox_lineStyle)
         self.ui_vbox_ctrl.addWidget(self.ui_combobox_color)
         self.ui_vbox_ctrl.addWidget(self.ui_combobox_marker)
+        self.ui_vbox_ctrl.addWidget(self.ui_checkbox1)
 
         # define event handlers
         self.connect(self.ui_button1, QtCore.SIGNAL('clicked()'),
@@ -195,7 +199,7 @@ class MainApp1Dextent(QtGui.QWidget):
                 vecy[i] = eval(equation)
                 print x, vecy[i]
 
-            self.ui_canvas.addPlot(vecx, vecy)
+            self.ui_canvas.addPlot(vecx, vecy, label="y=%s"%(equation))
         # ENDFOR
 
         # Draw !
@@ -207,6 +211,8 @@ class MainApp1Dextent(QtGui.QWidget):
         x = event.xdata
         y = event.ydata
 
+        #doshow = self.ui_checkbox1.isChecked()
+
         if x is not None and y is not None:
             msg = "You've clicked on a bar with coords:\n %f, %f" % (x, y)
             QtGui.QMessageBox.information(self, "Click!", msg)
@@ -216,7 +222,10 @@ class MainApp1Dextent(QtGui.QWidget):
     def on_mouseMotion(self, event):
         """
         """
-        print "Mouse is moving to ", event.xdata, event.ydata
+        doshow = self.ui_checkbox1.isChecked()
+        
+        if doshow is True: 
+            print "Mouse is moving to ", event.xdata, event.ydata
 
 
 if __name__ == "__main__":

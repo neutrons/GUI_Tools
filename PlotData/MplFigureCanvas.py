@@ -190,6 +190,11 @@ class Qt4MplCanvas(FigureCanvas):
 
         self.colorbar = None
 
+        # Variables for labels
+        self._myLastLineIndex = 0 # handler starts from 1
+        self._myLegendHandlers = []
+        self._myLegentLabels = []
+
         return
 
     def addPlot(self, x, y, color=None, label="", xlabel=None, ylabel=None, marker=None, linestyle=None, linewidth=1):
@@ -213,8 +218,15 @@ class Qt4MplCanvas(FigureCanvas):
             linestyle = '-'
             
         # color must be RGBA (4-tuple)
+        self._myLastLineIndex += 1
+        self._myLegendHandlers.append(self._myLastLineIndex)
+        if label is None or len(label) == 0:
+            label = "Plot %d" % (self._myLastLineIndex)
+        self._myLegentLabels.append(label)
+
         r = self.axes.plot(x, y, color=color, marker=marker, linestyle=linestyle,
                 label=label, linewidth=1) # return: list of matplotlib.lines.Line2D object
+
 
         self.axes.set_aspect('auto')
 
@@ -225,7 +237,8 @@ class Qt4MplCanvas(FigureCanvas):
             self.axes.set_ylabel(ylabel, fontsize=20)
 
         # set/update legend
-        self.axes.legend()
+        self._setupLegend()
+        #self.axes.legend()
 
         # Register
         if len(r) == 1: 
@@ -280,9 +293,14 @@ class Qt4MplCanvas(FigureCanvas):
         """ Add an image by file
         """
         import matplotlib.image as mpimg 
+
+        # set aspect to auto mode
+        self.axes.set_aspect('auto')
+
         img = mpimg.imread(str(imagefilename))
         lum_img = img[:,:,0] 
-        imgplot = self.axes.imshow(lum_img) 
+        # TODO : refactor for image size, interpolation and origin
+        imgplot = self.axes.imshow(img, extent=[0, 1000, 800, 0], interpolation='none', origin='lower')
 
         # Set color bar.  plt.colorbar() does not work!
         if self.colorbar is None:
@@ -364,8 +382,6 @@ class Qt4MplCanvas(FigureCanvas):
         self.draw()
 
         return
-
-
 
     def removePlot(self, ikey):
         """ Remove the line with its index as key
@@ -453,6 +469,34 @@ class Qt4MplCanvas(FigureCanvas):
         w, h = self.get_width_height()
         self.resize(w+1,h)
         self.resize(w,h)
+
+
+    def _setupLegend(self):
+        """ Set up legend
+        self.axes.legend()
+        Handler is a Line2D object. Lable maps to the line object
+        """
+        loclist = [
+            "best",
+            "upper right",
+            "upper left",
+            "lower left",
+            "lower right",
+            "right",
+            "center left",
+            "center right",
+            "lower center",
+            "upper center", 
+            "center"] 
+
+        handles, labels = self.axes.get_legend_handles_labels()
+        self.axes.legend(handles, labels, loc='best')    
+        print handles
+        print labels
+        #self.axes.legend(self._myLegendHandlers, self._myLegentLabels)
+
+        return
+
 
 
 class MyNavigationToolbar(NavigationToolbar):

@@ -3,7 +3,7 @@
 
 # Form implementation generated from reading ui file 'main_window_interface.ui'
 #
-# Created: Wed May  6 09:26:06 2015
+# Created: Wed May  6 11:25:36 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -43,17 +43,16 @@ class Ui_MainWindow(object):
         self.pushButton_2 = QtGui.QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
         self.verticalLayout.addWidget(self.pushButton_2)
-        self.pushButton_3 = QtGui.QPushButton(self.centralwidget)
-        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        self.verticalLayout.addWidget(self.pushButton_3)
-        self.pushButton_4 = QtGui.QPushButton(self.centralwidget)
-        self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
-        self.verticalLayout.addWidget(self.pushButton_4)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
         self.pushButton_5 = QtGui.QPushButton(self.centralwidget)
         self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
         self.verticalLayout.addWidget(self.pushButton_5)
+        spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem1)
+        self.pushButton_3 = QtGui.QPushButton(self.centralwidget)
+        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
+        self.verticalLayout.addWidget(self.pushButton_3)
         self.horizontalLayout.addLayout(self.verticalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
@@ -70,8 +69,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.pushButton.setText(_translate("MainWindow", "No Thread", None))
-        self.pushButton_2.setText(_translate("MainWindow", "Thread method 1", None))
-        self.pushButton_3.setText(_translate("MainWindow", "Thread method 2", None))
-        self.pushButton_4.setText(_translate("MainWindow", "Thread method 3", None))
+        self.pushButton_2.setText(_translate("MainWindow", "With Thread", None))
         self.pushButton_5.setText(_translate("MainWindow", "Display message in text box", None))
+        self.pushButton_3.setText(_translate("MainWindow", "Clear Text Edit", None))
 

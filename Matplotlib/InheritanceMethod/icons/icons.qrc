@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="MPL Toolbar">
+    <file>export_ascii.png</file>
+  </qresource>
+</RCC>

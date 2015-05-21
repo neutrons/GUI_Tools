@@ -26,7 +26,8 @@ my @files = glob($input_folder);
 foreach my $file (@files) {
     $_ = $file;
     ($base_name) = /(.*).ui/;
-    exec("pyuic4 $file > $output_folder$base_name.py")
+    system("pyuic4 $file > $output_folder$base_name.py");
+    print ">> pyuic4 $file > $output_folder$base_name.py\n";
 }
 
 exit 0;

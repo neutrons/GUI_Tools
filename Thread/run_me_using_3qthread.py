@@ -35,6 +35,10 @@ class ThreadApplication(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.pushButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")), self.threadMethod1)
         QtCore.QObject.connect(self.ui.pushButton_4, QtCore.SIGNAL(_fromUtf8("clicked()")), self.threadMethod2)
         QtCore.QObject.connect(self.ui.pushButton_6, QtCore.SIGNAL(_fromUtf8("clicked()")), self.threadMethod3)
+        QtCore.QObject.connect(self.ui.pushButton_7, QtCore.SIGNAL(_fromUtf8("clicked()")), self.stopThreadMethod1)
+        QtCore.QObject.connect(self.ui.pushButton_8, QtCore.SIGNAL(_fromUtf8("clicked()")), self.stopThreadMethod2)
+        QtCore.QObject.connect(self.ui.pushButton_9, QtCore.SIGNAL(_fromUtf8("clicked()")), self.stopThreadMethod3)
+
         QtCore.QObject.connect(self.ui.pushButton_5, QtCore.SIGNAL(_fromUtf8("clicked()")), self.displayMessageInBox)
         QtCore.QObject.connect(self.ui.pushButton_3, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clearTextEdit)  
 
@@ -55,6 +59,15 @@ class ThreadApplication(QtGui.QMainWindow):
         self.ui.textEdit.append("== Thread method 3 ==")
         self.thread3.setUpGui(self, 3)
         self.thread3.start()
+
+    def stopThreadMethod1(self):
+        print 'stop thread method1'
+    
+    def stopThreadMethod2(self):
+        print 'stop thread method2'
+    
+    def stopThreadMethod3(self):
+        print 'stop thread method3'
 
     def threadMethodDone1(self):
         self.ui.textEdit.append("done with thread method 1!")
@@ -77,19 +90,6 @@ class ThreadApplication(QtGui.QMainWindow):
     def clearTextEdit(self):
         self.ui.textEdit.clear()
     
-    #def closeEvent(self, event=None):
-        ## triggered when user exit application using top corner button (exit button)
-        #reply = QtGui.QMessageBox.question(self, 'Message',
-                                           #"Are you sure to quit?", QtGui.QMessageBox.Yes | 
-                                           #QtGui.QMessageBox.No, QtGui.QMessageBox.No)
-    
-        #if reply == QtGui.QMessageBox.Yes:
-        ##close application
-            #event.accept()
-        #else:
-        ##do nothing and return
-            #event.ignore()
-
 if __name__=="__main__":
     app = QtGui.QApplication(sys.argv)
     myapp = ThreadApplication()

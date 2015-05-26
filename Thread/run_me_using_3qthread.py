@@ -14,6 +14,7 @@ except AttributeError:
 class ThreadApplication(QtGui.QMainWindow):
 
     thread = None
+    thread1_paused_flag = False
 
     #initialize app
     def __init__(self, parent=None):
@@ -36,8 +37,7 @@ class ThreadApplication(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.pushButton_4, QtCore.SIGNAL(_fromUtf8("clicked()")), self.threadMethod2)
         QtCore.QObject.connect(self.ui.pushButton_6, QtCore.SIGNAL(_fromUtf8("clicked()")), self.threadMethod3)
         QtCore.QObject.connect(self.ui.pushButton_7, QtCore.SIGNAL(_fromUtf8("clicked()")), self.stopThreadMethod1)
-        QtCore.QObject.connect(self.ui.pushButton_8, QtCore.SIGNAL(_fromUtf8("clicked()")), self.stopThreadMethod2)
-        QtCore.QObject.connect(self.ui.pushButton_9, QtCore.SIGNAL(_fromUtf8("clicked()")), self.stopThreadMethod3)
+        QtCore.QObject.connect(self.ui.pushButton_8, QtCore.SIGNAL(_fromUtf8("clicked()")), self.pauseThreadMethod1)
 
         QtCore.QObject.connect(self.ui.pushButton_5, QtCore.SIGNAL(_fromUtf8("clicked()")), self.displayMessageInBox)
         QtCore.QObject.connect(self.ui.pushButton_3, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clearTextEdit)  
@@ -49,6 +49,9 @@ class ThreadApplication(QtGui.QMainWindow):
         self.ui.textEdit.append("== Thread method 1 ==")
         self.thread1.setUpGui(self, 1)
         self.thread1.start()
+        self.ui.pushButton_2.setEnabled(False)
+        self.ui.pushButton_7.setEnabled(True)
+        self.ui.pushButton_8.setEnabled(True)
 
     def threadMethod2(self):
         self.ui.textEdit.append("== Thread method 2 ==")
@@ -61,13 +64,19 @@ class ThreadApplication(QtGui.QMainWindow):
         self.thread3.start()
 
     def stopThreadMethod1(self):
-        print 'stop thread method1'
-    
-    def stopThreadMethod2(self):
-        print 'stop thread method2'
-    
-    def stopThreadMethod3(self):
-        print 'stop thread method3'
+        self.thread1.stop()
+        self.ui.pushButton_2.setEnabled(True)
+        self.ui.pushButton_7.setEnabled(False)
+        self.ui.pushButton_8.setEnabled(False)
+        
+    def pauseThreadMethod1(self):
+        if self.thread1_paused_flag:
+            self.ui.pushButton_8.setText("Pause Thread1")
+            self.thread1_paused_flag = False
+        else:
+            self.ui.pushButton_8.setText("Resume Thread1")
+            self.thread1_paused_flag = True
+        self.thread1.pause()
 
     def threadMethodDone1(self):
         self.ui.textEdit.append("done with thread method 1!")

@@ -2,20 +2,27 @@
 use warnings;
 use Getopt::Long qw(GetOptions);
 
-$input_folder = "./";
-$output_folder = "./";
+my $input_folder = "./";
+my $output_folder = "./";
 
 # build *.py form *.ui in the same folder
-GetOptions('help|h' => \$help
-           ) or die "Usage: $0 --help\n";
+GetOptions('input_folder=s' => \$input_folder,
+           'ouput_folder=s' => \$output_folder,
+           'help|h' => \$help
+           ) or die "Usage: $0 -i=ui_folder -o=py_folder --help\n";
 
 if ($help) {
     print "MANUAL \n=======\n";
-    print "input_folder and output_folder variable \nmust be manually edited in $0\n";
-    print "\next:\n";
+    print " This script allows to compile all the UI files automatically\n\n";
+    print "Examples:\n";
+    print "  $0 -i=ui_folder -o=py_folder\n";
+    print "  $0 -i=ui_folder\n";
+    print "  $0 --output_folder=py_folder\n";
     print "  $0 --help\n";
     print "  $0 -h\n\n";
     print "FLAGS \n-------\n";
+    printf("  %-19s folder that contains the ui files created with Desiger\n" ,"--input_folder/-i:");
+    printf("  %-19s folder that will contain the py files created by pyuic4\n" ,"--output_folder/-o:");
     print "  --help/-h: to display this help\n\n";
     exit 0;
 }
@@ -25,9 +32,11 @@ my @files = glob($input_folder);
 
 foreach my $file (@files) {
     $_ = $file;
-    ($base_name) = /(.*).ui/;
-    system("pyuic4 $file > $output_folder$base_name.py");
-    print ">> pyuic4 $file > $output_folder$base_name.py\n";
+    ($full_base_name) = /(.*).ui/;
+    @base_name = split('/', $full_base_name);
+    $base_name = $base_name[-1];
+    system("pyuic4 $file > $output_folder/$base_name.py");
+    print ">> pyuic4 $file > $output_folder/$base_name.py\n";
 }
 
 exit 0;

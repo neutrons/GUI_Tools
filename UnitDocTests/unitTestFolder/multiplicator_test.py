@@ -1,5 +1,5 @@
 import unittest
-from multiplicator import Multiplicator
+from underFolder.multiplicator import Multiplicator
 
 class TestMultiplicator(unittest.TestCase):
     

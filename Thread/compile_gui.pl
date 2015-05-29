@@ -2,8 +2,8 @@
 use warnings;
 use Getopt::Long qw(GetOptions);
 
-my $input_folder = "./";
-my $output_folder = "./";
+my $input_folder = ".";
+my $output_folder = ".";
 
 # build *.py form *.ui in the same folder
 GetOptions('input_folder=s' => \$input_folder,
@@ -27,6 +27,8 @@ if ($help) {
     exit 0;
 }
 
+check_folders($input_folder, $output_folder);
+
 $input_folder = "$input_folder/*.ui";
 my @files = glob($input_folder);
 
@@ -40,5 +42,13 @@ foreach my $file (@files) {
 }
 
 exit 0;
+
+sub check_folders
+{
+    ($input_folder, $output_folder) = @_;
+
+    -d $input_folder or die "$input_folder doesn't exist!";
+    -d $output_folder or die "$output_folder doesn't exist and must be created first!";
+}
 
 

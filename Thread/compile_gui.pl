@@ -45,7 +45,7 @@ exit 0;
 
 sub check_folders
 {
-    ($input_folder, $output_folder) = @_;
+    my ($input_folder, $output_folder) = @_;
 
     -d $input_folder or die "$input_folder doesn't exist!";
     -d $output_folder or die "$output_folder doesn't exist and must be created first!";

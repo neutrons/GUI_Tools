@@ -1,4 +1,4 @@
-from guiWithBug import Ui_Dialog
+from guiWithoutBug import Ui_Dialog
 from PyQt4 import QtGui, QtCore
 import sys
 import numpy as np
@@ -10,7 +10,7 @@ class MyApplication(QtGui.QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         
-#        self.initGui()
+        self.initGui()
         
     def initGui(self):
         magIcon = QtGui.QPixmap('magnifier.png')
@@ -19,30 +19,12 @@ class MyApplication(QtGui.QDialog):
         self.ui.clearButton.setIcon(clearIcon)
         sz = QtCore.QSize(15,15)
         self.ui.clearButton.setIconSize(sz)
-
-    def unselectAll(self):
-        print 'in unselectAll'
         
-    def userChangedTab(self):
-        print 'in unserChangedTab'
+    def lineEditFieldModified(self):
+        print 'in lineEditFieldModified'
         
-    def searchLineEditLive(self):
-        print 'in searchLineEditLive'
-        
-    def saveMetadataListAsAsciiFile(self):
-        print 'in saveMetadataListAsAsciiFile'
-        
-    def runNumberEditEvent(self):
-        print 'in runNumberEditEvent'
-        
-    def importConfiguration(self):
-        print 'in importConfiguration'
-        
-    def exportConfiguration(self):
-        print 'in exportConfiguration'
-        
-    def searchLineEditClear(self):
-        print 'in searchLineEditClear'
+    def clearButtonClicked(self):
+        print 'in clearButtonClicked'
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

@@ -1,0 +1,17 @@
+import unittest
+from underFolder.multiplicator import Multiplicator
+
+class TestMultiplicatorClassBelow(unittest.TestCase):
+    
+    def setUp(self):
+        pass
+    
+    def test_list_by_number(self):
+        multi1 = Multiplicator([3,4],2)
+        self.assertEqual(multi1.result, [6,8])
+        
+#if __name__ == '__main__':
+    #unittest.main()
+    
+suite=unittest.TestLoader().loadTestsFromTestCase(TestMultiplicatorClassBelow)
+    

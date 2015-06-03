@@ -1,11 +1,8 @@
 import unittest
-if __package__ is None:
-    import sys
-    from os import path
-    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-    from unitTestFolder.multiplicator import Multiplicator
-else:
-    from ..multiplicator import Multiplicator
+import sys
+from os import path
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from unitTestFolder.multiplicator import Multiplicator
 
 class TestMultiplicator1(unittest.TestCase):
     

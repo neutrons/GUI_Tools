@@ -16,3 +16,16 @@ test_list_by_list (underLayer1.multiplicator2_test.TestMultiplicator2) ... ok
 Ran 6 tests in 0.000s
 
 OK
+
+
+====================
+
+to run the test individually, one must un-comment the bottom lines of each unit test and comment the last line
+> python underLayer1/multiplicator1_class_above_test.py --verbose
+
+test_list_by_number (__main__.TestMultiplicatorClassAbove) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK

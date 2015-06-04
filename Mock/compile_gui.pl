@@ -8,8 +8,9 @@ my $output_folder = ".";
 # build *.py form *.ui in the same folder
 GetOptions('input_folder=s' => \$input_folder,
            'ouput_folder=s' => \$output_folder,
-           'help|h' => \$help
-           ) or die "Usage: $0 -i=ui_folder -o=py_folder --help\n";
+           'help|h' => \$help,
+           'verbose|v' => \$verbose
+           ) or die "Usage: $0 -i=ui_folder -o=py_folder -v --help\n";
 
 if ($help) {
     print "MANUAL \n=======\n";
@@ -17,12 +18,13 @@ if ($help) {
     print "Examples:\n";
     print "  $0 -i=ui_folder -o=py_folder\n";
     print "  $0 -i=ui_folder\n";
-    print "  $0 --output_folder=py_folder\n";
+    print "  $0 --output_folder=py_folder -v\n";
     print "  $0 --help\n";
     print "  $0 -h\n\n";
     print "FLAGS \n-------\n";
     printf("  %-19s folder that contains the ui files created with Desiger\n" ,"--input_folder/-i:");
     printf("  %-19s folder that will contain the py files created by pyuic4\n" ,"--output_folder/-o:");
+    print "  --verbose-v: to display list of commands executed\n";
     print "  --help/-h: to display this help\n\n";
     exit 0;
 }
@@ -38,7 +40,9 @@ foreach my $file (@files) {
     @base_name = split('/', $full_base_name);
     $base_name = $base_name[-1];
     system("pyuic4 $file > $output_folder/$base_name.py");
-    print ">> pyuic4 $file > $output_folder/$base_name.py\n";
+    if ($verbose) { 
+        print ">> pyuic4 $file > $output_folder/$base_name.py\n";
+    }
 }
 
 exit 0;

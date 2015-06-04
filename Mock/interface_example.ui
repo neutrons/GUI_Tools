@@ -31,29 +31,48 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="magnifierLabel">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Prefix to each line:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="searchLineEdit"/>
+       <widget class="QLineEdit" name="prefixValue"/>
       </item>
      </layout>
     </item>
     <item>
-     <widget class="QTableWidget" name="topTableWidget"/>
+     <widget class="QTextEdit" name="textEditTop">
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;this is the first line&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;and this is the second line&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;and third line here&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;and last line !&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="moveTextButton">
       <property name="text">
        <string>Move Top text to Bottom</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QTableWidget" name="bottomTableWidget"/>
+     <widget class="QTextEdit" name="textEditBottom"/>
+    </item>
+    <item>
+     <widget class="QPushButton" name="exportTextButton">
+      <property name="text">
+       <string>Export Text ...</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -72,14 +91,30 @@
  <resources/>
  <connections>
   <connection>
-   <sender>searchLineEdit</sender>
-   <signal>textEdited(QString)</signal>
+   <sender>moveTextButton</sender>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>lineEditFieldModified()</slot>
+   <slot>moveTopTextToBottomButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>590</x>
-     <y>48</y>
+     <x>399</x>
+     <y>301</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportTextButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportBottomTextButton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>399</x>
+     <y>558</y>
     </hint>
     <hint type="destinationlabel">
      <x>399</x>
@@ -89,7 +124,7 @@
   </connection>
  </connections>
  <slots>
-  <slot>lineEditFieldModified()</slot>
-  <slot>clearButtonClicked()</slot>
+  <slot>moveTopTextToBottomButton()</slot>
+  <slot>exportBottomTextButton()</slot>
  </slots>
 </ui>

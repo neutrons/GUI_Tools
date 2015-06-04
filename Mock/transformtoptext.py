@@ -19,3 +19,4 @@ class TransformTopText(object):
         new_text = '\n'.join(new_text_array)
         cls.parent.ui.textEditBottom.setText(new_text)
         
+    

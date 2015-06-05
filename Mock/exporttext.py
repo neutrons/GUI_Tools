@@ -5,10 +5,7 @@ class ExportText(object):
     
     def __init__(cls, parent=None):
         cls.parent = parent
-        
         cls.retrieveBottomText()
-        cls.getFilename()
-        cls.exportToFile()
         
     def retrieveBottomText(cls):
         cls.input_text = str(cls.parent.ui.textEditBottom.toPlainText())

@@ -24,7 +24,6 @@ class ExportText_test(unittest.TestCase):
         _my_object = ExportText(parent=parent)
         _my_object.filename = self.filename
         self.assertEqual(_my_object.input_text, self.input_text)
-        
     
     #@patch('exporttext.ExportText.createAsciiFile', MagicMock(return_value=True))
     #def test_exportToFile(self):

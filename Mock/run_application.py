@@ -17,6 +17,7 @@ class MyApplication(QtGui.QMainWindow):
         
     def exportBottomTextButton(self):
         exportText = ExportText(self)
+        exportText.retrieveBottomText()
         exportText.getFilename()
         exportText.exportToFile()
 

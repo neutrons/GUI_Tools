@@ -3,6 +3,7 @@ from exporttext import ExportText
 from mock import MagicMock, patch
 from PyQt4.QtGui import QFileDialog
 from PyQt4 import QtGui
+import exporttext
 
 class ExportText_test(unittest.TestCase):
     
@@ -41,13 +42,14 @@ class ExportText_test(unittest.TestCase):
         _my_object.getFilename()
         self.assertEqual(self.filename, _my_object.filename)
     
-    #def test_exportFile(self):
-        #with patch('createAsciiFile()', MagicMock(return_value=True)) as mock:
-            #parent = MagicMock()
-            #_my_object = ExportText(parent=parent)
-            #_my_object.filename = self.filename
-            #_my_object.exportToFile()
-            #self.assertEqual(_my_object.export_status, True)
+    def test_exportFile(self):
+        with patch('exporttext.ExportText.createAsciiFile', MagicMock(return_value=True)) as mock:
+            parent = MagicMock()
+            _my_object = ExportText(parent=parent)
+            _my_object.input_text = self.input_text
+            _my_object.filename = self.filename
+            _my_object.exportToFile()
+            self.assertEqual(_my_object.export_status, True)
             
 if __name__ == '__main__':
     unittest.main()

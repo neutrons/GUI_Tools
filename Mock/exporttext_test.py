@@ -41,8 +41,14 @@ class ExportText_test(unittest.TestCase):
         _my_object.getFilename()
         self.assertEqual(self.filename, _my_object.filename)
     
-        
-    
+    #def test_exportFile(self):
+        #with patch('createAsciiFile()', MagicMock(return_value=True)) as mock:
+            #parent = MagicMock()
+            #_my_object = ExportText(parent=parent)
+            #_my_object.filename = self.filename
+            #_my_object.exportToFile()
+            #self.assertEqual(_my_object.export_status, True)
+            
 if __name__ == '__main__':
     unittest.main()
     

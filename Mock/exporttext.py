@@ -19,14 +19,19 @@ class ExportText(object):
         text_array = cls.input_text.split('\n')
         new_text = [str(text) for text in text_array]
         new_text = '\n'.join(new_text)
-        cls.createAsciiFile(cls.filename, new_text)
+        cls.export_status = cls.createAsciiFile(cls.filename, new_text)
         
     def createAsciiFile(cls, filename, str_list):
-        if os.path.isfile(filename):
-            os.remove(filename)
-        f = open(filename,'w')
-        for _line in str_list:
-            f.write(_line)
-        f.close()    
+        _status = True
+        try:
+            if os.path.isfile(filename):
+                os.remove(filename)
+            f = open(filename,'w')
+            for _line in str_list:
+                f.write(_line)
+        except:
+            _status = False
+        finally:
+            f.close()    
         
         

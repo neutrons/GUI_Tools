@@ -3,25 +3,25 @@ import os
 
 class ExportText(object):
     
-    def __init__(cls, parent=None):
-        cls.parent = parent
+    def __init__(self, parent=None):
+        self.parent = parent
         
-    def retrieveBottomText(cls):
-        cls.input_text = str(cls.parent.ui.textEditBottom.toPlainText())
+    def retrieveBottomText(self):
+        self.input_text = str(self.parent.ui.textEditBottom.toPlainText())
 
-    def getFilename(cls):
-        cls.filename = QFileDialog.getSaveFileName(cls.parent, "Select file name", "", "ASCII (*.txt)")
+    def getFilename(self):
+        self.filename = QFileDialog.getSaveFileName(self.parent, "Select file name", "", "ASCII (*.txt)")
 
-    def exportToFile(cls):
-        if not str(cls.filename):
+    def exportToFile(self):
+        if not str(self.filename):
             return
         
-        text_array = cls.input_text.split('\n')
+        text_array = self.input_text.split('\n')
         new_text = [str(text) for text in text_array]
         new_text = '\n'.join(new_text)
-        cls.export_status = cls.createAsciiFile(cls.filename, new_text)
+        self.export_status = self.createAsciiFile(self.filename, new_text)
         
-    def createAsciiFile(cls, filename, str_list):
+    def createAsciiFile(self, filename, str_list):
         _status = True
         try:
             if os.path.isfile(filename):

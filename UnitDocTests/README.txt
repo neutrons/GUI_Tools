@@ -29,6 +29,34 @@ How to run the tests:
 3/ run doctests
 > python docTestFolder/square.py
 
+4/ using nosetests (which needs to be preinstall if not already there)
+nb: nosetests does not run the doc tests
+from the root directory of the project
+> nosetests -v
+est_list_by_number (UnitDocTests.unitTestFolder.multiplicator1_class_above_test.TestMultiplicator1) ... ok
+test_list_by_number (UnitDocTests.unitTestFolder.multiplicator1_class_below_test.TestMultiplicator1) ... ok
+test_list_by_list (UnitDocTests.unitTestFolder.multiplicator2_test.TestMultiplicator2) ... ok
+explain here what this test is doing ... ok
+This message will be displayed if this test fails ... ok
+tell here what we are doing in this test ... ok
+test_list_by_number (UnitDocTests.unitTestSuiteFolder.multiplicator1_test.TestMultiplicator1) ... ok
+test_list_by_list (UnitDocTests.unitTestSuiteFolder.multiplicator2_test.TestMultiplicator2) ... ok
+test_list_by_list (UnitDocTests.unitTestSuiteFolder.multiplicator_test.TestMultiplicator) ... ok
+test_list_by_number (UnitDocTests.unitTestSuiteFolder.multiplicator_test.TestMultiplicator) ... ok
+UnitDocTests.test_all.load_tests ... ERROR
+
+======================================================================
+ERROR: UnitDocTests.test_all.load_tests
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/j35/anaconda/lib/python2.7/site-packages/nose/case.py", line 197, in runTest
+    self.test(*self.arg)
+TypeError: load_tests() takes exactly 3 arguments (0 given)
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.003s
+
+FAILED (errors=1)
 
 
 

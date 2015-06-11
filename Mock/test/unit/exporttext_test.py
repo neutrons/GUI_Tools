@@ -31,11 +31,20 @@ class ExportText_test(unittest.TestCase):
             
     @patch('PyQt4.QtGui.QFileDialog.getSaveFileName', MagicMock(return_value='/top/users/remove_me.txt')) 
     def test_retrieve_output_filename_method2(self):
+        '''assert using global path to QFileDialog'''
         parent = MagicMock()
         _my_object = ExportText(parent=parent)
         _my_object.getFilename()
         self.assertEqual(self.filename, _my_object.filename)
     
+    @patch('myMock.exporttext.QFileDialog.getSaveFileName', MagicMock(return_value='/top/users/remove_me.txt')) 
+    def test_retrieve_output_filename_method3(self):
+        '''assert using package path to QFileDialog'''
+        parent = MagicMock()
+        _my_object = ExportText(parent=parent)
+        _my_object.getFilename()
+        self.assertEqual(self.filename, _my_object.filename)
+
     def test_export_file(self):
         with patch('myMock.exporttext.ExportText.createAsciiFile', MagicMock(return_value=True)) as mock:
             parent = MagicMock()

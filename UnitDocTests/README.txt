@@ -23,11 +23,20 @@ How to run the tests:
 1/ run individual tests
 > python unitTestFolder/multiplicator_test.py -v
 
+
+
+
 2/ run all tests (test suite)
 > python -m unittest discover -v
 
+
+
+
 3/ run doctests
 > python docTestFolder/square.py
+
+
+
 
 4/ using nosetests (which needs to be preinstall if not already there)
 nb: nosetests does not run the doc tests
@@ -57,6 +66,56 @@ TypeError: load_tests() takes exactly 3 arguments (0 given)
 Ran 11 tests in 0.003s
 
 FAILED (errors=1)
+
+
+
+
+Checking the coverage of the unit tests
+_______________________________________
+
+There is a nice plugin of nosetests 'nose-cov'
+This plugins shows how much code coverage is provided by our unittest
+
+
+a/ install nose-cov
+> pip install nose-cov
+
+b/ run it
+> nosetests --with-coverage
+........
+Name                      Stmts   Miss  Cover   Missing
+-------------------------------------------------------
+PyQt4                         0      0   100%
+mock                       1249   1249     0%   16-2367
+myMock                        0      0   100%
+myMock.exporttext            27     11    59%   17, 25-35
+myMock.transformtoptext      15      0   100%
+-------------------------------------------------------
+TOTAL                      1291   1260     2%
+----------------------------------------------------------------------
+Ran 8 tests in 0.077s
+
+OK
+
+
+
+If there is a line that is reported that does not need to be tested (like script that launch the program)
+we can add the following pragma at the end of the line
+
+  if __name__ == "__main__":   #pragma: no cover
+    ....
+
+
+
+
+Get colored output message
+__________________________
+This is done with another plugin called 'rednose'
+> pip install rednose
+
+> nosetests -v --rednose
+
+'''will give a colored output version of the resulting unit tests'''
 
 
 

@@ -1,0 +1,6 @@
+To run the tests, cd to the top folder of the project
+> cd <path>/Mock
+> nosetests -sv             -s: no log capture (display everything)
+                            -v: verbose mode
+                            
+                            

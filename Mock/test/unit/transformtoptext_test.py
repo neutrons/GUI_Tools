@@ -1,6 +1,9 @@
 import unittest
-from transformtoptext import TransformTopText
 from mock import MagicMock
+import sys
+from os import path
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from myMock.transformtoptext import TransformTopText
 
 class TransformTopText_test(unittest.TestCase):
     

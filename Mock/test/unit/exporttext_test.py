@@ -1,9 +1,11 @@
 import unittest
-from exporttext import ExportText
+import sys
+from os import path
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from myMock.exporttext import ExportText
 from mock import MagicMock, patch
 from PyQt4.QtGui import QFileDialog
 from PyQt4 import QtGui
-import exporttext
 
 class ExportText_test(unittest.TestCase):
     
@@ -35,7 +37,7 @@ class ExportText_test(unittest.TestCase):
         self.assertEqual(self.filename, _my_object.filename)
     
     def test_export_file(self):
-        with patch('exporttext.ExportText.createAsciiFile', MagicMock(return_value=True)) as mock:
+        with patch('myMock.exporttext.ExportText.createAsciiFile', MagicMock(return_value=True)) as mock:
             parent = MagicMock()
             _my_object = ExportText(parent=parent)
             _my_object.input_text = self.input_text

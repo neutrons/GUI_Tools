@@ -38,8 +38,8 @@ How to run the tests:
 
 
 
-4/ using nosetests (which needs to be preinstall if not already there)
-nb: nosetests does not run the doc tests
+4/ using nosetests (which needs to be install if not already there)
+NB: nosetests does not run the doc tests
 from the root directory of the project
 > nosetests -v
 est_list_by_number (UnitDocTests.unitTestFolder.multiplicator1_class_above_test.TestMultiplicator1) ... ok

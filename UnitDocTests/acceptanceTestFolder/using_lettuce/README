@@ -1,0 +1,8 @@
+to run the tests, move to the top folder
+> cd ..../acceptanceTestFolder/using_lettuce
+
+then launch the bdd tests
+> lettuce tests/bdd
+
+very nice tutorial can be found here
+http://code.tutsplus.com/tutorials/behavior-driven-development-in-python--net-26547

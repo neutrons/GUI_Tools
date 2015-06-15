@@ -1,0 +1,171 @@
+Acceptance test (1.0.1) using morelia
+
+#1 first thing to do is prepare the folder structure
+
+projectName
+    |
+    | ------ code folder-------------- __init__.py
+    |                                       |___  code.py
+    |
+    |------ tests----------- __init__.py
+        |___ unit ----- __init__.py
+        |                |___ (code_test.py)
+        |___ bdd ---- __init__.py
+        |                |__ (code.feature)
+        |                |___ (test_acceptance.py)
+        |___ data
+
+() are right now file missing !
+
+
+Before even starting writing any lines of code, we must first write the BDD (Behavior Driven Development) file.
+
+"""
+Feature: peak finder
+    Using secondary derivation 
+    and using a data set
+    this program will return the location
+    of the peak by giving
+    peak_min and peak_max
+    
+Scenario: locate peak for easy data set
+    Given the easy data set "tests/data/easy_data_set.csv"
+    Then the peak range should be "151" and "159"
+    
+"""
+
+it's called code.feature and must be in the bdd folder. 
+
+
+They key words here are Feature, Scenario, Given, Then ....
+
+
+
+=> Here a few options are available:
+        * using lettuce
+        * using morelia
+        * ...
+
+
+Using Morelia
++++++++++++++
+
+https://morelia.readthedocs.org/en/latest/gherkin.html
+
+We are telling here, in plain english, what the code is supposed to do.
+
+Then we need to prepare the test_acceptance.py file
+
+
+From there, running nosetests:
+> nosetests -v tests/bd.
+
+This will fail, of course, because we didn't write any single line of code yet !
+But this is telling us what we should put at the end of our acceptance file !
+we copy paste the code into peakinfer.feature and run it again...still error !
+
+From there, now we can start working on the code and the unit test in parallel !
+
+...
+
+Once we are done
+"""
+# using Morelia
+import unittest
+from morelia import run
+import os
+import sys
+from os import path
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from peakfinderalgorithms.file_loading_utility import loadCsvFile
+from peakfinderalgorithms.peakfinderderivation import PeakFinderDerivation
+
+class PeakFinderTestCase(unittest.TestCase):
+    
+    def test_peak_finder(self):
+        """ peak finder feature """
+        filename = os.path.join(os.path.dirname(__file__), 'peakfinder.feature')
+        run(filename, self, verbose=True, show_all_missing=True)
+        
+    def step_the_easy_data_set_tests_data_easy_data_set_csv(self, tests_data_easy_data_set_csv):
+        r'the easy data set "([^"]+)"'
+        [self.xdata, self.ydata, self.edata] = loadCsvFile(tests_data_easy_data_set_csv)
+    
+    def step_the_peak_range_should_be_number_and_number(self, number1, number2):
+        r'the peak range should be "([^"]+)" and "([^"]+)"'
+        peakfinder1 = PeakFinderDerivation(self.xdata, self.ydata, self.edata)
+        peaks = peakfinder1.getPeaks()
+        self.assertEqual(peaks, [int(number1), int(number2)])
+
+"""
+
+
+Everything seems ok but still failing one test somehow !!!!! (maybe bug as it's using the parameter as it supposed to and give the final right results…. just complaining about the number of parameters passed…but using them the right way !!!!)
+
+
+
+
+
+using lettuce
++++++++++++++
+
+
+> pip install lettuce
+if not there already
+
+"""
+# -*- coding: utf-8 -*-
+from lettuce import *
+from nose.tools import assert_equals
+import os
+import sys
+from os import path
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from peakfinderalgorithms.file_loading_utility import loadCsvFile
+from peakfinderalgorithms.peakfinderderivation import PeakFinderDerivation
+
+
+@step(u'Given the easy data set "([^"]*)"')
+def given_the_easy_data_set_group1(step, group1):
+    [world.xdata, world.ydata, world.edata] = loadCsvFile(group1)
+
+@step(u'Then the peak range should be "([^"]*)" and "([^"]*)"')
+def then_the_peak_range_should_be_group1_and_group2(step, group1, group2):
+    peakfinder1 = PeakFinderDerivation(world.xdata, world.ydata, world.edata)
+    peaks = peakfinder1.getPeaks()
+    assert_equals(peaks, [int(group1), int(group2)])
+
+"""
+
+world: is like a global namespace
+
+and running the lettuce test
+
+"""
+mac83978:RealCaseAlgorithm j35$ lettuce tests/bdd/
+
+Feature: peak finder                                       # tests/bdd/peakfinder.feature:1
+  Using secondary derivation                               # tests/bdd/peakfinder.feature:2
+  and using a data set                                     # tests/bdd/peakfinder.feature:3
+  this program will return the location                    # tests/bdd/peakfinder.feature:4
+  of the peak by giving                                    # tests/bdd/peakfinder.feature:5
+  peak_min and peak_max                                    # tests/bdd/peakfinder.feature:6
+
+  Scenario: locate peak for easy data set                  # tests/bdd/peakfinder.feature:8
+    Given the easy data set "tests/data/easy_data_set.csv" # tests/bdd/test_acceptance.py:13
+    Then the peak range should be "151" and "159"          # tests/bdd/test_acceptance.py:17
+
+1 feature (1 passed)
+1 scenario (1 passed)
+2 steps (2 passed)
+
+"""
+
+
+
+
+
+
+
+
+

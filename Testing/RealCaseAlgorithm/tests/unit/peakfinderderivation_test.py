@@ -7,7 +7,7 @@ from peakfinderalgorithms.peakfinderderivation import PeakFinderDerivation
 from peakfinderalgorithms.file_loading_utility import load_csv_file
 
 class TestPeakFinderDerivation(unittest.TestCase):
-    
+
     def setUp(self):
         pass
 
@@ -16,7 +16,7 @@ class TestPeakFinderDerivation(unittest.TestCase):
         [xdata, ydata, edata] = load_csv_file('tests/data/easy_data_set.csv')
         xdata10 = xdata[0:10]
         self.assertEqual(xdata10, [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0])
-    
+
     def test_load_csv_file_yaxis(self):
         '''Step1 - Loading: checking that load_csv_file works correctly on yaxis'''
         [xdata, ydata, edata] = load_csv_file('tests/data/easy_data_set.csv')
@@ -36,7 +36,7 @@ class TestPeakFinderDerivation(unittest.TestCase):
         high_x = peakfinder1.five_highest_xdata
         high_x = high_x.tolist()
         self.assertEqual(high_x, [155., 156., 154., 157., 153.])
-        
+
     def test_get5HighestPoints_ydata(self):
         '''Step2 - 5highest points: using run 125682 to check calculation of 5 highest points - ydata '''
         [xdata, ydata, edata] = load_csv_file('tests/data/easy_data_set.csv')
@@ -73,7 +73,7 @@ class TestPeakFinderDerivation(unittest.TestCase):
         [xdata_first, ydata_first] = [peakfinder.xdata_firstderi, peakfinder.ydata_firstderi]
         xdata10= xdata_first[0:10]
         self.assertEqual(xdata10, [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5])
-    
+
     def test_calculatefirstderivative_yaxis(self):
         '''Step4 - derivative: testing the first derivative calculation - axis y'''
         [xdata, ydata, edata] = load_csv_file('tests/data/easy_data_set.csv')
@@ -130,20 +130,21 @@ class TestPeakFinderDerivation(unittest.TestCase):
         peakfinder1 = PeakFinderDerivation(xdata, ydata, edata)
         peaks = peakfinder1.peaks
         self.assertEqual(peaks, [151, 159])
-    
+
     def test_case_medium_data_set(self):
         '''Step7 - calculate final peak range using run 124211 (medium data set)'''
         [xdata, ydata, edata] = load_csv_file('tests/data/medium_data_set.csv')
         peakfinder1 = PeakFinderDerivation(xdata, ydata, edata)
         peaks = peakfinder1.peaks
         self.assertEqual(peaks, [151, 159])
-    
+
     def test_case_hard_data_set(self):
         '''Step7 - calculate final peak range using run 124135 (hard data set)'''
         [xdata, ydata, edata] = load_csv_file('tests/data/hard_data_set.csv')
         peakfinder1 = PeakFinderDerivation(xdata, ydata, edata)
         peaks = peakfinder1.peaks
         self.assertEqual(peaks, [145,164])
-    
+
 if __name__ == '__main__':
     unittest.main()
+    

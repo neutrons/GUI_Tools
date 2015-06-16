@@ -1,0 +1,6 @@
+To run unit tests
+> cd ..../RealCaseAlgorithm
+> nosetests tests/ --rednose -v
+
+to run acceptance tests
+> lettuce tests/

@@ -1,7 +1,7 @@
 import sys
 import time
 from PyQt4 import QtGui, QtCore, Qt
-from thread_class_method1 import AThread
+from thread_class_method1 import  
 
 from main_window_interface import Ui_MainWindow
 

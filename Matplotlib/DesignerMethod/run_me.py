@@ -1,6 +1,7 @@
 from myGUI import Ui_MainWindow
 from PyQt4 import QtGui
 import sys
+import numpy as np
 
 class MyApplication(QtGui.QMainWindow):
     
@@ -11,6 +12,11 @@ class MyApplication(QtGui.QMainWindow):
 
         self.ui.myPlot.singleClick.connect(self.single_click)
         self.ui.myPlot.toolbar.homeClicked.connect(self.home_click)
+        
+        self.plotData()
+        
+    def plotData(self):
+        self.ui.myPlot.imshow(np.random.rand(42,42))
         
     def single_click(self):
         print 'single click'

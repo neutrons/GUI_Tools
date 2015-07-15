@@ -5,8 +5,8 @@ class GetterSetterClass():
     def __init__(cls, age):
         cls.__age = age             # x is a private variable
         
-    def getAge(cls):
-        return cls.__age
+    def getAge(self):
+        return self.__age
     
     def setAge(cls, age):
         if age < 0:

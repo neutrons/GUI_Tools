@@ -1,16 +1,19 @@
 class GetterSetterClass(object):
     
-    def __init__(cls, age):
-        cls.setAge(age)
-        
-    def getAge(cls):
-        return cls.__age
+    _a = '1 underscore'
+    __b = '2 underscore'
     
-    def setAge(cls, age):
+    def __init__(self, age):
+        self.setAge(age)
+        
+    def getAge(self):
+        return self.__age
+    
+    def setAge(self, age):
         if age < 0:
-            cls.__age = 0
+            self.__age = 0
         else:
-            cls.__age = age
+            self.__age = age
 
     age = property(getAge, setAge)
 
@@ -23,3 +26,5 @@ if __name__ == "__main__":
     print my_object.age    # -> 10
     my_object.age = -20
     print my_object.age    # -> 0
+    print my_object._a
+    print my_object.__b

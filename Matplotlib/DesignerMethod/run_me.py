@@ -21,7 +21,6 @@ class MyApplication(QtGui.QMainWindow):
     def spinBoxValueChanged(self, value):
         print 'value is %d' %value
 
-
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     mplQt = MyApplication()

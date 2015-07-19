@@ -82,6 +82,26 @@ optional arguments:
   -v {0,1,2}, --verbose {0,1,2}
                         verbose mode
 
+example8.py - combine flags
+-----------
+> python example8.py
+> python example8.py -a
+Flag1 has been triggered
+> python example8.py -ab
+Flag1 has been triggered
+Flag1 has been triggered
+
+example9.py - conflicting options
+-----------
+> python example9.py 
+Neither quiet or verbose are on
+> python example9.py -v
+mode verbose is ON
+> python example9.py -q
+mode quiet is ON
+> python example9.py -qv
+usage: example9.py [-h] [-v | -q]
+example9.py: error: argument -v/--verbose: not allowed with argument -q/--quiet
 
 
 

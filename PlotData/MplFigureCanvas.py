@@ -75,6 +75,8 @@ class Qt4MplPlotView(QtGui.QWidget):
         """ Add a new plot
         """
         self.canvas.addPlot(x, y, color, label, xlabel, ylabel, marker, linestyle, linewidth)
+        #self.canvas.addPlotY2(x, y*100)
+        self.canvas.addPlotY2([0, 1, 2], [50, 30, 15])
 
         return
 
@@ -227,10 +229,19 @@ class Qt4MplCanvas(FigureCanvas):
     def __init__(self, parent):
         """  Initialization
         """
+        from mpl_toolkits.axes_grid1 import host_subplot 
+        import mpl_toolkits.axisartist as AA 
+        import matplotlib.pyplot as plt
+
         # Instantialize matplotlib Figure
-        self.fig = Figure()
+        self.fig = Figure() 
         self.fig.patch.set_facecolor('white')
-        self.axes = self.fig.add_subplot(111) # return: matplotlib.axes.AxesSubplot
+        
+        if True:
+            self.axes = self.fig.add_subplot(111) # return: matplotlib.axes.AxesSubplot
+            self.axes2 = None
+        else:
+            self.axes = self.fig.add_host_subplot(111)
 
         # Initialize parent class and set parent
         FigureCanvas.__init__(self, self.fig)
@@ -281,6 +292,55 @@ class Qt4MplCanvas(FigureCanvas):
             self.axes.set_xlabel(xlabel, fontsize=20)
         if ylabel is not None:
             self.axes.set_ylabel(ylabel, fontsize=20)
+
+        # set/update legend
+        self._setupLegend()
+
+        # Register
+        if len(r) == 1:
+            self._lineDict[self._lineIndex] = r[0]
+        else:
+            print "Impoooooooooooooooosible!"
+        self._lineIndex += 1
+
+        # Flush/commit
+        self.draw()
+
+        return
+
+
+    def addPlotY2(self, x, y, color=None, label="", xlabel=None, ylabel=None, marker=None, linestyle=None, linewidth=1):
+        """ Add second plot
+        """
+        if self.axes2 is None:
+            self.axes2 = self.axes.twinx()
+            # print self.par1, type(self.par1)
+
+        # Hold previous data
+        self.axes2.hold(True)
+
+        # process inputs and defaults
+        self._x2 = x
+        self._y2 = y
+
+        if color is None:
+            color = (0,1,0,1)
+        if marker is None:
+            marker = 'o'
+        if linestyle is None:
+            linestyle = '-'
+
+        # color must be RGBA (4-tuple)
+        r = self.axes2.plot(x, y, color=color, marker=marker, linestyle=linestyle,
+                label=label, linewidth=linewidth) # return: list of matplotlib.lines.Line2D object
+
+        self.axes2.set_aspect('auto')
+
+        # set x-axis and y-axis label
+        if xlabel is not None:
+            self.axes2.set_xlabel(xlabel, fontsize=20)
+        if ylabel is not None:
+            self.axes2.set_ylabel(ylabel, fontsize=20)
 
         # set/update legend
         self._setupLegend()

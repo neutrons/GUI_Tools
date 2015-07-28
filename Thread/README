@@ -1,0 +1,18 @@
+# The first 3 programs show how the NO THREAD button blocks the GUI when the THREAD button does not
+# source: http://stackoverflow.com/questions/6783194/background-thread-with-qthread-in-pyqt
+
+# Subclassing QThread
+# http://qt-project.org/doc/latest/qthread.html
+> python run_me_using_qthread.py
+
+# Subclassing QObject and using moveToThread
+# http://blog.qt.digia.com/blog/2007/07/05/qthreads-no-longer-abstract
+> python run_me_using_move_to_thread.py
+
+# Subclassing QRunnable
+# http://qt-project.org/doc/latest/qthreadpool.html
+> python run_me_using_qrunnable.py
+
+# Subclassing QThread and using 3 threads
+> python run_me_using_3qthread.py
+

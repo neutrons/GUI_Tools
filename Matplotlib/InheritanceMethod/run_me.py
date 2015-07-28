@@ -10,22 +10,26 @@ class MyApplication(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.myPlot.singleClick.connect(self.single_click)
-        self.ui.myPlot.toolbar.homeClicked.connect(self.home_click)
+        #self.ui.myPlot.singleClick.connect(self.single_click)
+        #self.ui.myPlot.toolbar.homeClicked.connect(self.home_click)
+        self.ui.myPlot.toolbar.exportClicked.connect(self.exportClickHere)
         
         self.plotData()
         
+    def exportClickHere(self):
+        print 'in run_me.py running export_ascii'
+    
     def plotData(self):
         self.ui.myPlot.imshow(np.random.rand(42,42))
         
-    def single_click(self):
-        print 'single click'
+    #def single_click(self):
+        #print 'single click'
         
-    def home_click(self):
-        print 'home click'
+    #def home_click(self):
+        #print 'home click'
 
-    def spinBoxValueChanged(self, value):
-        print 'value is %d' %value
+    #def spinBoxValueChanged(self, value):
+        #print 'value is %d' %value
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

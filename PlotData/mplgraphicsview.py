@@ -1,5 +1,6 @@
 #pylint: disable=invalid-name,too-many-public-methods,too-many-arguments,non-parent-init-called
 import os
+import numpy
 
 from PyQt4 import QtGui
 
@@ -44,8 +45,11 @@ MplBasicColors = [
         "yellow",
         "white"]
 
+class IndicatorLine(object):
+    """ A picker line """
 
-class Qt4MplPlotView(QtGui.QWidget):
+
+class MplGraphicsView(QtGui.QWidget):
     """ A combined graphics view including matplotlib canvas and
     a navigation tool bar
     """
@@ -76,10 +80,25 @@ class Qt4MplPlotView(QtGui.QWidget):
         """
         self.canvas.addPlot(x, y, color, label, xlabel, ylabel, marker, linestyle, linewidth)
         #self.canvas.addPlotY2(x, y*100)
-        self.canvas.addPlotY2([0, 1, 2], [50, 30, 15])
+        # self.canvas.addPlotY2([0, 1, 2], [50, 30, 15])
 
         return
+    
+    def addHorizontalIndicator(self, y, color):
+        """ Add an indicator line
+        """
+        xmin, xmax = self.canvas.getXLimit()
+        vecx = numpy.array([xmin, xmax])
+        vecy = numpy.array([y, y])
+        
+        self._indicatorKey = self.canvas.addPlot(vecx, vecy, color, linestyle='--')
 
+        return
+            
+    def addVerticalIndicator(self, x, color):
+        """ Add a vertical indicator line """
+        ymin, ymax = self.canvas.getYLimit()
+        
 
     def addPlot2D(self, array2d, xmin, xmax, ymin, ymax, holdprev=True, yticklabels=None):
         """ Plot a 2D image
@@ -153,6 +172,12 @@ class Qt4MplPlotView(QtGui.QWidget):
         """
         """
         return self.canvas.updateLine(ikey, vecx, vecy, linestyle, linecolor, marker, markercolor)
+    
+    def updateIndicator(self, vecx, vecy, ikey=None):
+        """
+        """
+        if ikey is None:
+            ikey = self._indicatorKey 
 
 
     def getLineStyleList(self):
@@ -266,6 +291,8 @@ class Qt4MplCanvas(FigureCanvas):
         Argument:
         - x: numpy array X
         - y: numpy array Y
+        
+        Return :: new key
         """
         # Hold previous data
         self.axes.hold(True)
@@ -297,16 +324,17 @@ class Qt4MplCanvas(FigureCanvas):
         self._setupLegend()
 
         # Register
+        linekey = self._lineIndex
         if len(r) == 1:
-            self._lineDict[self._lineIndex] = r[0]
+            self._lineDict[linekey] = r[0]
+            self._lineIndex += 1    
         else:
-            print "Impoooooooooooooooosible!"
-        self._lineIndex += 1
+            print "Impoooooooooooooooosible!  Return from plot is a %d-tuple. " % (len(r))
 
         # Flush/commit
         self.draw()
 
-        return
+        return linekey
 
 
     def addPlotY2(self, x, y, color=None, label="", xlabel=None, ylabel=None, marker=None, linestyle=None, linewidth=1):

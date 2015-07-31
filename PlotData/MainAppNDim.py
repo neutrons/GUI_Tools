@@ -3,6 +3,24 @@
 #
 # Main Application for both 1D and 2D Image
 #
+# Version 2.0
+# - Focus on interacting with GUI
+#
+# Use cases
+# (1) Add a vertical picker line and move it by push buttons;
+# (2) Add a vertical picker line and move it by mouse;
+#
+# * Use case 1:
+#   1. User clicks button 'Pick Mode';
+#   2. App enters mode SELECTPOINTNEW from NOINTERACTION ;
+#   3. User moves mouse cursor on to canvas and click mouse's button 1 (left);
+#   4. App draw a vertical line crossing the cursor's position upon mouse's button being released;
+#   5. User specifies step size in the line editor between button 'move left' and 'move right';
+#   6. ... ...
+#
+# * Use case 2:
+#   1. ...
+#
 ###############################################################################
 import sys
 import os
@@ -21,6 +39,14 @@ except AttributeError:
 
 from ui_MainWindowNDim import *
 
+class GraphInteractMode:
+    NOINTERACTION = 0
+    SELECTPOINTNEW = 1
+    SELECTPOINTMID = 2
+    
+class MouseStatus:
+    RELEASED = 0
+    PRESSED = 1
 
 class MainAppNDim(QtGui.QMainWindow):
     """ Main application for 1-D (x-y) plot
@@ -60,10 +86,68 @@ class MainAppNDim(QtGui.QMainWindow):
         self.ui.comboBox_marker.addItems(self.ui.canvas.getLineMarkerList())
 
         # define event handlers for matplotlib canvas
-        self.ui.canvas.canvas.mpl_connect('button_press_event', self.on_mouseDownEvent)
+        self.ui.canvas.canvas.mpl_connect('button_press_event', self.on_mousePressEvent)
+        self.ui.canvas.canvas.mpl_connect('button_release_event', self.on_mouseReleaseEvent)
         self.ui.canvas.canvas.mpl_connect('motion_notify_event', self.on_mouseMotion)
+        
+        # Interaction operation
+        self.connect(self.ui.pushButton_intoPickMode, QtCore.SIGNAL('clicked()'),
+                     self.do_enter_pick_mode)
+        self.connect(self.ui.pushButton_moveLeft, QtCore.SIGNAL('clicked()'),
+                     self.do_move_picker_left)        
+        self.connect(self.ui.pushButton_moveRight, QtCore.SIGNAL('clicked()'),
+                     self.do_move_picker_right)
+        self.connect(self.ui.pushButton_select, QtCore.SIGNAL('clicked()'),
+                     self.do_add_picker)
+        
+        self.connect(self.ui.pushButton_cancelInteractMode, QtCore.SIGNAL('clicked()'),
+                     self.do_leave_interact_mode)
+
+        # Mode
+        self._interactMode = GraphInteractMode.NOINTERACTION
+        self._mouseStatus = MouseStatus.RELEASED
 
         return
+    
+    def do_add_picker(self):
+        """ Decide to add the picker 
+        """
+        if self._interactMode != GraphInteractMode.SELECTPOINTMID:
+            raise NotImplementedError('Interaction mode must be SELECTPOINTMID.')
+
+        self._interactMode = GraphInteractMode.SELECTPOINTNEW
+        
+        return
+    
+    def do_enter_pick_mode(self):
+        """Enter interaction/selection mode
+        """
+        # Check current status
+        if self._interactMode != GraphInteractMode.NOINTERACTION:
+            raise NotImplementedError('Interaction mode is not NONITERACTION.  Operation invalid.')
+        
+        self._interactMode = GraphInteractMode.SELECTPOINTNEW
+        
+        return
+    
+    def do_leave_interact_mode(self):
+        """
+        """
+        self._interactMode = GraphInteractMode.NOINTERACTION
+        print "[DB] Mode is set back to NONITERACTION"
+    
+    def do_move_picker_left(self):
+        """ Move picker line left by 1 step 
+        """
+        if self._interactMode != GraphInteractMode.SELECTPOINTMID:
+            raise NotImplementedError('Must be in state SELECTPOINTMID')
+        
+    def do_move_picker_right(self):
+        """ Move picker line left by 1 step 
+        """
+        if self._interactMode != GraphInteractMode.SELECTPOINTMID:
+            raise NotImplementedError('Must be in state SELECTPOINTMID')        
+        
 
     def doChangeLastLine(self):
         """ Change the color and value of last line
@@ -281,8 +365,8 @@ class MainAppNDim(QtGui.QMainWindow):
 
         return
 
-    def on_mouseDownEvent(self, event):
-        """ Respond to pick up a value with mouse down event
+    def on_mousePressEvent(self, event):
+        """ Respond to pick up a value with mouse down event if it is on MplGraphicsView's canvas
         Definition of button_press_event is:
           button_press_event(x, y, button, dblclick=False, guiEvent=None)
         Thus event has x, y and button.
@@ -292,17 +376,23 @@ class MainAppNDim(QtGui.QMainWindow):
          2: middle
          3: right
         """
+        self._mouseStatus = MouseStatus.PRESSED
+        
         x = event.xdata
         y = event.ydata
         button = event.button
+        print "[DB] Button %d is (pressed) down."%(button)
         
+        # NOTE: on Linux, button 1 is left button, buton 3 is right button
 
+        # In case of mouse is in the canvas' region
         if x is not None and y is not None:
-
             if button == 1:
-                msg = "You've clicked on a bar with coords:\n %f, %f\n and button %d" % (x, y, button)
-                QtGui.QMessageBox.information(self, "Click!", msg)
-
+                msg = "You've pressed on canvas with coords:\n %f, %f\n and button %d" % (x, y, button)
+                print "Button 1: ", msg
+                # QtGui.QMessageBox.information(self, "Click!", msg)
+                self._mouseStatus = MouseStatus.PRESSED
+                
             elif button == 3:
                 # right click of mouse will pop up a context-menu
                 self.ui.menu = QtGui.QMenu(self) 
@@ -319,6 +409,30 @@ class MainAppNDim(QtGui.QMainWindow):
                 self.ui.menu.popup(QtGui.QCursor.pos())
 
         return
+    
+    def on_mouseReleaseEvent(self, event):
+        """
+        """
+        self._mouseStatus = MouseStatus.RELEASED
+        
+        print "Released... "
+        
+        x = event.xdata
+        y = event.ydata
+        button = event.button
+        
+        msg = "You've released mouse button %d @ (%.5f, %.5f)" % (button, x, y)
+        print msg
+        
+        return
+        
+        if self._interactMode == GraphInteractMode.SELECTPOINTNEW:
+            self._do_add_picker(x, y)
+        elif self._interactMode == GraphInteractMode.SELECTPOINTMID:
+            self._do_move_picker(x, y)          
+        
+      
+        
 
     def on_mouseMotion(self, event):
         """
@@ -342,6 +456,19 @@ class MainAppNDim(QtGui.QMainWindow):
         print "Remove something?"
 
         return
+    
+    
+    def _do_add_picker(self, x, y):
+        """ Pick add a picker line 
+        """
+        # Plot 2 new lines dashed and etc. 
+        self.ui.canvas.addHorizontalIndicator(y, 'blue')
+        
+    def _do_move_picker(self, x, y):
+        """ Move the picker line
+        """
+        # Move 
+    
 
 
 if __name__ == "__main__":

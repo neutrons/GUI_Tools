@@ -208,7 +208,7 @@ class MainAppNDim(QtGui.QMainWindow):
     def doClear2D(self):
         """ Clear 2D image (2D plot and image from imshow)
         """
-        self.ui.canvas.clearCanvas()
+        self.ui.canvas.clear_canvas()
 
         return
 
@@ -256,7 +256,7 @@ class MainAppNDim(QtGui.QMainWindow):
 
         yticklabels = ['a', 'b', 'c', 'd', 'e']
         holdprev=True
-        self.ui.canvas.addPlot2D(dim2array, xmin=x0, xmax=xf, ymin=0, ymax=4+1, holdprev=True, yticklabels=yticklabels)
+        self.ui.canvas.add_plot_2d(dim2array, x_min=x0, x_max=xf, y_min=0, y_max=4+1, hold_prev_image=True, y_tick_label=yticklabels)
 
         return
 
@@ -292,7 +292,7 @@ class MainAppNDim(QtGui.QMainWindow):
                 x = vecx[i]
                 vecy[i] = eval(equation)
 
-            self.ui.canvas.addPlot(vecx, vecy)
+            self.ui.canvas.add_plot_1d(vecx, vecy, label=equation)
         # ENDFOR
 
         # Draw !

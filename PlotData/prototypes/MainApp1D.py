@@ -164,7 +164,7 @@ class MainApp1D(QtGui.QWidget):
                 vecy[i] = eval(equation)
                 print x, vecy[i]
 
-            self.ui_canvas.addPlot(vecx, vecy)
+            self.ui_canvas.add_plot_1d(vecx, vecy)
         # ENDFOR
 
         # Draw !

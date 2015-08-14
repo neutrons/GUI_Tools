@@ -33,20 +33,22 @@ class TreeViewWindow(QtGui.QMainWindow):
         self.ui = mainUi.Ui_MainWindow()
         self.ui.setupUi(self)
 
-        actionpairlist = [ 
-                ('Add', self.doAddFile),
-                ('Info', self.doPrintInfo)]
+        action_pair_list = [
+            ('Add', self.doAddFile),
+            ('Info', self.doPrintInfo)]
 
-        self._setupStandardTreeView(self.ui.treeView_main, actionpairlist)
+        self._setupStandardTreeView(self.ui.treeView_main, action_pair_list)
         self._setupFileSystemTreeView(self.ui.treeView_file)
 
         # Event handling
         self.connect(self.ui.pushButton_addCol0, QtCore.SIGNAL('clicked()'),
-                self.do_add_item_to_col0)
+                     self.do_add_item_to_col0)
         self.connect(self.ui.pushButton_appendCol0, QtCore.SIGNAL('clicked()'),
-                self.do_append_item_to_col0)
+                     self.do_append_item_to_col0)
         self.connect(self.ui.pushButton_appendCol1, QtCore.SIGNAL('clicked()'),
-                self.do_append_item_to_col1)
+                     self.do_append_item_to_col1)
+        self.connect(self.ui.pushButton_removeLastCol1, QtCore.SIGNAL('clicked()'),
+                     self.do_remove_last_item)
 
         # Drag and drop setup
         self.ui.lineEdit_col0.setDragEnabled(True)
@@ -64,7 +66,8 @@ class TreeViewWindow(QtGui.QMainWindow):
         (2) action menu
         """
         # Tree widget setup for multiple selection
-        treeviewwidget.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+        treeviewwidget.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        # NOTE:  QtGui.QAbstractItemView.MultiSelection make you always in multiple selection mode.
 
         # Model with 2 columns
         model = QtGui.QStandardItemModel()
@@ -219,22 +222,39 @@ class TreeViewWindow(QtGui.QMainWindow):
     def do_append_item_to_col1(self):
         """ Append... copy code from do_add_item_col0
         """
-        iCol = 1
+        # Column index
+        index_column = 1
 
         value = str(self.ui.lineEdit_col1.text())
 
         # non-selected: appending     
-        numrows = self.ui.treeView_main.model().rowCount()
-        print "Current treeview has %d rows."%(numrows)
+        num_rows = self.ui.treeView_main.model().rowCount()
+        print "Current treeview has %d rows."%(num_rows)
 
-        # new item
-        itemmain = QtGui.QStandardItem(QtCore.QString(value)) 
-        itemmain.setCheckable(False)
-        inewrow = numrows
-        self.ui.treeView_main.model().setItem(inewrow, iCol, itemmain)
+        # Create a new item for MODEL
+        new_item = QtGui.QStandardItem(QtCore.QString(value))
+        new_item.setCheckable(False)
+
+        # Determine the index of the new item.. in appending mode, always the last
+        index_new_row = num_rows
+        self.ui.treeView_main.model().setItem(index_new_row, index_column, new_item)
 
         return
 
+    def do_remove_last_item(self):
+        """
+
+        :return:
+        """
+        # Column index
+        index_column = 1
+
+        num_rows = self.ui.treeView_main.model().rowCount()
+        the_model = self.ui.treeView_main.model()
+        assert(isinstance(the_model, QtGui.QStandardItemModel))
+        the_model.removeRow(num_rows-1)
+
+        return
 
 
 if __name__ == "__main__":

@@ -267,7 +267,7 @@ class MainAppNDim(QtGui.QMainWindow):
         # parse input
         linelist = str(self.ui.lineEdit_formular.text()).split(";")
         for line in linelist:
-            # get formular, x-range and bin size
+            # get formula, x-range and bin size
             line = line.strip()
             if len(line) == 0:
                 continue

@@ -1,4 +1,5 @@
-#
+#!/usr/bin/python
+
 # Features:
 # 1. Add items to tree view
 # 2. Select multiple items of tree view
@@ -14,6 +15,7 @@
 #
 
 import sys
+import os
 
 from PyQt4 import QtGui, QtCore, Qt
 
@@ -40,6 +42,11 @@ class TreeViewWindow(QtGui.QMainWindow):
         self._setupStandardTreeView(self.ui.treeView_main, action_pair_list)
         self._setupFileSystemTreeView(self.ui.treeView_file)
 
+        self.ui.treeView_custom.init_setup(header_list=['IPTS-Run'])
+
+        # Class variables
+        self._rootPath = os.path.expanduser('~')
+
         # Event handling
         self.connect(self.ui.pushButton_addCol0, QtCore.SIGNAL('clicked()'),
                      self.do_add_item_to_col0)
@@ -50,12 +57,78 @@ class TreeViewWindow(QtGui.QMainWindow):
         self.connect(self.ui.pushButton_removeLastCol1, QtCore.SIGNAL('clicked()'),
                      self.do_remove_last_item)
 
+        self.connect(self.ui.pushButton_addIPTS, QtCore.SIGNAL('clicked()'),
+                     self.do_add_ipts)
+        self.connect(self.ui.pushButton_addRun, QtCore.SIGNAL('clicked()'),
+                     self.do_add_run)
+        self.connect(self.ui.pushButton_addIptsRun, QtCore.SIGNAL('clicked()'),
+                     self.do_add_run_by_ipts)
+        self.connect(self.ui.pushButton_insertRun, QtCore.SIGNAL('clicked()'),
+                     self.do_insert_run)
+        self.connect(self.ui.pushButton_clearModel, QtCore.SIGNAL('clicked()'),
+                     self.do_clear_tree)
+
         # Drag and drop setup
         self.ui.lineEdit_col0.setDragEnabled(True)
-        self.ui.plainTextEdit_main.setAcceptDrops(True)
+        # self.ui.plainTextEdit_main.setAcceptDrops(True)
+
+        # FileSystemTreeView
+        self.connect(self.ui.pushButton_setCurrentDir, QtCore.SIGNAL('clicked()'),
+                     self.do_set_current_path)
+        self.connect(self.ui.pushButton_browseRootPath, QtCore.SIGNAL('clicked()'),
+                     self.do_set_root_path)
+        self.connect(self.ui.pushButton_getCurrentPath, QtCore.SIGNAL('clicked()'),
+                     self.do_get_current_path)
 
         return
 
+
+    def do_add_ipts(self):
+        """
+
+        :return:
+        """
+        ipts = str(self.ui.lineEdit_ipts.text())
+        self.ui.treeView_custom.add_main_item('IPTS-%s' % str(ipts), False)
+        self.ui.lineEdit_ipts.clear()
+
+        return
+
+    def do_add_run(self):
+        """
+
+        :return:
+        """
+        run = str(self.ui.lineEdit_run.text())
+        self.ui.treeView_custom.add_child_current_item(run)
+        self.ui.lineEdit_run.clear()
+
+        return
+
+    def do_add_run_by_ipts(self):
+        """
+
+        :return:
+        """
+        ipts = str(self.ui.lineEdit_ipts.text())
+        run = str(self.ui.lineEdit_run.text())
+
+        self.ui.treeView_custom.add_child_main_item(ipts, run)
+
+    def do_clear_tree(self):
+        """
+
+        :return:
+        """
+        self.ui.treeView_custom.clear_tree()
+
+    def do_insert_run(self):
+        """
+
+        :return:
+        """
+        run = str(self.ui.lineEdit_run.text())
+        self.ui.treeView_custom.insert_child_current_item(run)
 
     #-------------------------------------------------------------------------
     # Example to set up a TreeView widget
@@ -253,6 +326,37 @@ class TreeViewWindow(QtGui.QMainWindow):
         the_model = self.ui.treeView_main.model()
         assert(isinstance(the_model, QtGui.QStandardItemModel))
         the_model.removeRow(num_rows-1)
+
+        return
+
+    def do_get_current_path(self):
+        """
+
+        :return:
+        """
+        current_index = self.ui.treeView_fileSystem.currentIndex()
+        self.ui.lineEdit_readOutCurrentPath.setText(str(current_index))
+
+        return
+
+    def do_set_root_path(self):
+        """ Call the method to set up root path
+        :return:
+        """
+        root_path = str(QtGui.QFileDialog.getExistingDirectory(self, 'Get Root Directory', '/'))
+        self.ui.lineEdit_rootPath.setText(root_path)
+        self.ui.treeView_fileSystem.set_root_path(root_path)
+        self._rootPath = root_path
+
+        return
+
+    def do_set_current_path(self):
+        """
+        :return:
+        """
+        current_path = str(QtGui.QFileDialog.getExistingDirectory(self, 'Get Current Directory', self._rootPath))
+        self.ui.lineEdit_currentPath.setText(current_path)
+        self.ui.treeView_fileSystem.set_current_path(current_path)
 
         return
 

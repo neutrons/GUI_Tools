@@ -36,10 +36,68 @@
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
            <widget class="QPushButton" name="pushButton_intoPickMode">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pick mode: &lt;/p&gt;&lt;p&gt;1. Add a picker / Select a picker&lt;/p&gt;&lt;p&gt;2. Press mouse's left button to move it left and right or up and down;&lt;/p&gt;&lt;p&gt;3. Release mouse's button the stop moving the indicator line;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Pick Mode</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_addPickupLine">
+            <property name="text">
+             <string>Add PIcker</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_indicators">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <item>
+             <property name="text">
+              <string/>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_select">
+            <property name="text">
+             <string>Select</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_moveLeft">
@@ -71,13 +129,6 @@
            <widget class="QPushButton" name="pushButton_moveRight">
             <property name="text">
              <string>Move Right</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_select">
-            <property name="text">
-             <string>Select</string>
             </property>
            </widget>
           </item>
@@ -142,16 +193,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QLineEdit" name="lineEdit_maxY">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="5">
            <spacer name="horizontalSpacer_2">
             <property name="orientation">
@@ -203,6 +244,16 @@
            <widget class="QPushButton" name="pushButton_rescale">
             <property name="text">
              <string>Scale</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="lineEdit_maxY">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
            </widget>
           </item>

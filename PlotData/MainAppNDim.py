@@ -61,6 +61,10 @@ class MainAppNDim(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        # Mode
+        self._interactMode = GraphInteractMode.NOINTERACTION
+        self._mouseStatus = MouseStatus.RELEASED
+
         # define event handlers
         self.connect(self.ui.pushButton_plot1D, QtCore.SIGNAL('clicked()'),
                 self.doPlot)
@@ -93,6 +97,9 @@ class MainAppNDim(QtGui.QMainWindow):
         # Interaction operation
         self.connect(self.ui.pushButton_intoPickMode, QtCore.SIGNAL('clicked()'),
                      self.do_enter_pick_mode)
+        self.connect(self.ui.pushButton_addPickupLine, QtCore.SIGNAL('clicked()'),
+                     self.do_add_picker)
+
         self.connect(self.ui.pushButton_moveLeft, QtCore.SIGNAL('clicked()'),
                      self.do_move_picker_left)        
         self.connect(self.ui.pushButton_moveRight, QtCore.SIGNAL('clicked()'),
@@ -103,20 +110,23 @@ class MainAppNDim(QtGui.QMainWindow):
         self.connect(self.ui.pushButton_cancelInteractMode, QtCore.SIGNAL('clicked()'),
                      self.do_leave_interact_mode)
 
-        # Mode
-        self._interactMode = GraphInteractMode.NOINTERACTION
-        self._mouseStatus = MouseStatus.RELEASED
-
         return
     
     def do_add_picker(self):
         """ Decide to add the picker 
         """
-        if self._interactMode != GraphInteractMode.SELECTPOINTMID:
-            raise NotImplementedError('Interaction mode must be SELECTPOINTMID.')
+        if self._interactMode != GraphInteractMode.SELECTPOINTNEW:
+            raise NotImplementedError('Interaction mode must be SELECTPOINTNEW.')
+        else:
+            self._interactMode = GraphInteractMode.SELECTPOINTMID
 
-        self._interactMode = GraphInteractMode.SELECTPOINTNEW
-        
+        indicator_id = self.ui.canvas.add_vertical_indicator()
+
+        # Update comboBox for message
+        self.ui.comboBox_indicators.addItem(QtCore.QString(indicator_id))
+        size = self.ui.comboBox_indicators.count()
+        self.ui.comboBox_indicators.setCurrentIndex(size-1)
+
         return
     
     def do_enter_pick_mode(self):
@@ -124,9 +134,13 @@ class MainAppNDim(QtGui.QMainWindow):
         """
         # Check current status
         if self._interactMode != GraphInteractMode.NOINTERACTION:
-            raise NotImplementedError('Interaction mode is not NONITERACTION.  Operation invalid.')
+            raise NotImplementedError('Interaction mode is not NONINTERACTION.  Operation invalid.')
         
         self._interactMode = GraphInteractMode.SELECTPOINTNEW
+
+        # Change button's status
+        self.ui.pushButton_intoPickMode.setText('Picking')
+        self.ui.pushButton_intoPickMode.setDisabled(True)
         
         return
     
@@ -135,12 +149,23 @@ class MainAppNDim(QtGui.QMainWindow):
         """
         self._interactMode = GraphInteractMode.NOINTERACTION
         print "[DB] Mode is set back to NONITERACTION"
+
+        self.ui.pushButton_intoPickMode.setText('Pick Mode')
+        self.ui.pushButton_intoPickMode.setEnabled(True)
+
+        return
     
     def do_move_picker_left(self):
         """ Move picker line left by 1 step 
         """
         if self._interactMode != GraphInteractMode.SELECTPOINTMID:
             raise NotImplementedError('Must be in state SELECTPOINTMID')
+
+        picker_id = str(self.ui.comboBox_indicators.currentText())
+        dx = float(self.ui.lineEdit_step.text())
+        self.ui.canvas.move_picker_horizontal(picker_id, dx)
+
+        return
         
     def do_move_picker_right(self):
         """ Move picker line left by 1 step 

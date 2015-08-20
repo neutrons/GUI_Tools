@@ -1,4 +1,4 @@
-#pylint: disable=invalid-name,too-many-public-methods,too-many-arguments,non-parent-init-called, too-many-branches
+#pylint: disable=invalid-name,too-many-public-methods,too-many-arguments,non-parent-init-called,R0902,too-many-branches
 import os
 import numpy as np
 
@@ -44,12 +44,81 @@ MplBasicColors = [
     "green",
     "cyan",
     "magenta",
-    "yellow"] 
+    "yellow"]
 
-class IndicatorLine(object):
-    """ A picker line """
-    # TODO - To be implemented
 
+class IndicatorManager(object):
+    """ Manager for all indicator lines
+    """
+    def __init__(self):
+        """
+
+        :return:
+        """
+        # Auto color index
+        self._colorIndex = 0
+        # Auto line ID
+        self._autoLineID = 1
+
+        self._lineManager = {}
+
+        return
+
+    def add_vertical_indicator(self, x, y_min, y_max, color):
+        """
+        Add a vertical indicator to data structure
+        :return: indicator ID
+        """
+        # Get ID
+        this_id = str(self._autoLineID)
+        self._autoLineID += 1
+
+        #
+        vec_x = np.array([x, x])
+        vec_y = np.array([y_min, y_max])
+
+        #
+        self._lineManager[this_id] = (vec_x, vec_y, color)
+
+        return this_id
+
+    def get_data(self, line_id):
+        """
+
+        :param line_id:
+        :return:
+        """
+        return self._lineManager[line_id][0], self._lineManager[line_id][1]
+
+    def get_line_style(self, line_id=None):
+        """
+
+        :param line_id:
+        :return:
+        """
+        return '--'
+
+    def get_marker(self, line_id=None):
+        """
+
+        :param line_id:
+        :return:
+        """
+        return 'o'
+
+    def get_next_color(self):
+        """
+        Get next color by auto color index
+        :return: string as color
+        """
+        next_color = MplBasicColors[self._colorIndex]
+
+        # Advance and possibly reset color scheme
+        self._colorIndex += 1
+        if self._colorIndex == len(MplBasicColors):
+            self._colorIndex = 0
+
+        return next_color
 
 class MplGraphicsView(QtGui.QWidget):
     """ A combined graphics view including matplotlib canvas and
@@ -77,10 +146,16 @@ class MplGraphicsView(QtGui.QWidget):
         self._myLineMarkerColorIndex = 0
         self.setAutoLineMarkerColorCombo()
 
+        # Declaration of class variables
+        self._indicatorKey = None
+
+        # Indicator manager
+        self._myIndicatorsManager = IndicatorManager()
+
         return
 
-    def add_plot_1d(self, vec_x, vec_y, y_err=None, color=None, label="", x_label=None, y_label=None, marker=None,
-                    line_style=None, line_width=1):
+    def add_plot_1d(self, vec_x, vec_y, y_err=None, color=None, label="", x_label=None, y_label=None,
+                    marker=None, line_style=None, line_width=1):
         """ Add a new plot
         """
         self.canvas.add_plot_1d(vec_x, vec_y, y_err, color, label, x_label, y_label, marker, line_style, line_width)
@@ -89,23 +164,50 @@ class MplGraphicsView(QtGui.QWidget):
         #self.canvas.addPlotY2([0, 1, 2], [50, 30, 15])
 
         return
-    
+
     def addHorizontalIndicator(self, y, color):
         """ Add an indicator line
         """
         xmin, xmax = self.canvas.getXLimit()
         vecx = numpy.array([xmin, xmax])
         vecy = numpy.array([y, y])
-        
+
         self._indicatorKey = self.canvas.add_plot_1d(vecx, vecy, color, line_style='--')
 
         return
-            
-    def addVerticalIndicator(self, x, color):
-        """ Add a vertical indicator line """
-        ymin, ymax = self.canvas.getYLimit()
 
-        return
+    def add_vertical_indicator(self, x=None, color=None):
+        """
+        Add a vertical indicator line
+        :param x: None as the automatic mode using default from middle of canvas
+        :param color: None as the automatic mode using default
+        :return:
+        """
+        # For indicator line's position
+        if x is None:
+            x_min, x_max = self.canvas.getXLimit()
+            x = (x_min + x_max) * 0.5
+        else:
+            assert isinstance(x, float)
+
+        y_min, y_max = self.canvas.getYLimit()
+
+        # For color
+        if color is None:
+            color = self._myIndicatorsManager.get_next_color()
+        else:
+            assert isinstance(color, str)
+
+        # Form
+        my_id = self._myIndicatorsManager.add_vertical_indicator(x, y_min, y_max, color)
+        vec_x, vec_y = self._myIndicatorsManager.get_data(my_id)
+
+        self.canvas.add_plot_1d(vec_x=vec_x, vec_y=vec_y,
+                                color=color, marker=self._myIndicatorsManager.get_marker(),
+                                line_style=self._myIndicatorsManager.get_line_style(),
+                                line_width=2)
+
+        return my_id
 
     def add_plot_2d(self, array2d, x_min, x_max, y_min, y_max, hold_prev_image=True, y_tick_label=None):
         """
@@ -181,7 +283,6 @@ class MplGraphicsView(QtGui.QWidget):
         """
         return self.canvas.setXYLimit(xmin, xmax, ymin, ymax)
 
-
     def updateLine(self, ikey, vecx, vecy, linestyle=None, linecolor=None, marker=None, markercolor=None):
         """
         """
@@ -191,7 +292,9 @@ class MplGraphicsView(QtGui.QWidget):
         """
         """
         if ikey is None:
-            ikey = self._indicatorKey 
+            ikey = self._indicatorKey
+
+        # TODO - ASAP ... ...
 
 
     def getLineStyleList(self):
@@ -275,14 +378,14 @@ class Qt4MplCanvas(FigureCanvas):
     def __init__(self, parent):
         """  Initialization
         """
-        from mpl_toolkits.axes_grid1 import host_subplot 
+        # from mpl_toolkits.axes_grid1 import host_subplot
         # import mpl_toolkits.axisartist as AA
-        import matplotlib.pyplot as plt
+        # import matplotlib.pyplot as plt
 
         # Instantialize matplotlib Figure
-        self.fig = Figure() 
+        self.fig = Figure()
         self.fig.patch.set_facecolor('white')
-        
+
         if True:
             self.axes = self.fig.add_subplot(111) # return: matplotlib.axes.AxesSubplot
             self.axes2 = None
@@ -371,7 +474,7 @@ class Qt4MplCanvas(FigureCanvas):
         line_key = self._lineIndex
         if len(r) == 1:
             self._lineDict[line_key] = r[0]
-            self._lineIndex += 1    
+            self._lineIndex += 1
         else:
             print "Impoooooooooooooooosible!  Return from plot is a %d-tuple. " % (len(r))
 
@@ -392,8 +495,8 @@ class Qt4MplCanvas(FigureCanvas):
         self.axes2.hold(True)
 
         # process inputs and defaults
-        self._x2 = x
-        self._y2 = y
+        # self._x2 = x
+        # self._y2 = y
 
         if color is None:
             color = (0,1,0,1)
@@ -538,7 +641,7 @@ class Qt4MplCanvas(FigureCanvas):
         # Try to clear the color bar
         if len(self.fig.axes) > 1:
             self.fig.delaxes(self.fig.axes[1])
-            self.colorBar = None
+            self._colorBar = None
             # This clears the space claimed by color bar but destroys sub_plot too.
             self.fig.clear()
             # Re-create subplot

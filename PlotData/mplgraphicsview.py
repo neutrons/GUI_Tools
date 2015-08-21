@@ -61,6 +61,7 @@ class IndicatorManager(object):
         self._autoLineID = 1
 
         self._lineManager = {}
+        self._canvasLineKeyDict = {}
 
         return
 
@@ -78,9 +79,17 @@ class IndicatorManager(object):
         vec_y = np.array([y_min, y_max])
 
         #
-        self._lineManager[this_id] = (vec_x, vec_y, color)
+        self._lineManager[this_id] = [vec_x, vec_y, color]
 
         return this_id
+
+    def get_canvas_line_index(self, my_id):
+        """
+
+        :param my_id:
+        :return:
+        """
+        return self._canvasLineKeyDict[my_id]
 
     def get_data(self, line_id):
         """
@@ -119,6 +128,30 @@ class IndicatorManager(object):
             self._colorIndex = 0
 
         return next_color
+
+    def set_canvas_line_index(self, my_id, canvas_line_index):
+        """
+
+        :param my_id:
+        :param canvas_line_index:
+        :return:
+        """
+        self._canvasLineKeyDict[my_id] = canvas_line_index
+
+    def shift(self, my_id, dx, dy):
+        """
+
+        :param my_id:
+        :param dx:
+        :param dy:
+        :return:
+        """
+        print self._lineManager[my_id][0]
+        self._lineManager[my_id][0] += dx
+
+        self._lineManager[my_id][1] += dy
+
+        return
 
 class MplGraphicsView(QtGui.QWidget):
     """ A combined graphics view including matplotlib canvas and
@@ -202,10 +235,11 @@ class MplGraphicsView(QtGui.QWidget):
         my_id = self._myIndicatorsManager.add_vertical_indicator(x, y_min, y_max, color)
         vec_x, vec_y = self._myIndicatorsManager.get_data(my_id)
 
-        self.canvas.add_plot_1d(vec_x=vec_x, vec_y=vec_y,
-                                color=color, marker=self._myIndicatorsManager.get_marker(),
-                                line_style=self._myIndicatorsManager.get_line_style(),
-                                line_width=2)
+        canvas_line_index = self.canvas.add_plot_1d(vec_x=vec_x, vec_y=vec_y,
+                                                    color=color, marker=self._myIndicatorsManager.get_marker(),
+                                                    line_style=self._myIndicatorsManager.get_line_style(),
+                                                    line_width=2)
+        self._myIndicatorsManager.set_canvas_line_index(my_id, canvas_line_index)
 
         return my_id
 
@@ -273,6 +307,20 @@ class MplGraphicsView(QtGui.QWidget):
         """
         return self.canvas.getYLimit()
 
+    def move_indicator_horizontal(self, line_id, dx):
+        """
+        Move the indicator line in horizontal
+        :param line_id:
+        :param dx:
+        :return:
+        """
+        canvas_line_index = self._myIndicatorsManager.get_canvas_line_index(line_id)
+        self._myIndicatorsManager.shift(line_id, dx=dx, dy=0)
+        vec_x, vec_y = self._myIndicatorsManager.get_data(line_id)
+        self.canvas.updateLine(ikey=canvas_line_index, vecx=vec_x, vecy=vec_y)
+
+        return
+
     def removePlot(self, ikey):
         """
         """
@@ -287,15 +335,6 @@ class MplGraphicsView(QtGui.QWidget):
         """
         """
         return self.canvas.updateLine(ikey, vecx, vecy, linestyle, linecolor, marker, markercolor)
-    
-    def updateIndicator(self, vecx, vecy, ikey=None):
-        """
-        """
-        if ikey is None:
-            ikey = self._indicatorKey
-
-        # TODO - ASAP ... ...
-
 
     def getLineStyleList(self):
         """

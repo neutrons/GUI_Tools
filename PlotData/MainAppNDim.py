@@ -48,6 +48,8 @@ class MouseStatus:
     RELEASED = 0
     PRESSED = 1
 
+MOUSE_RESOLUTION = 0.05
+
 class MainAppNDim(QtGui.QMainWindow):
     """ Main application for 1-D (x-y) plot
     """
@@ -90,9 +92,10 @@ class MainAppNDim(QtGui.QMainWindow):
         self.ui.comboBox_marker.addItems(self.ui.canvas.getLineMarkerList())
 
         # define event handlers for matplotlib canvas
-        self.ui.canvas.canvas.mpl_connect('button_press_event', self.on_mousePressEvent)
+        self.ui.canvas.canvas.mpl_connect('button_press_event', self.on_mouse_press_event)
         self.ui.canvas.canvas.mpl_connect('button_release_event', self.on_mouseReleaseEvent)
-        self.ui.canvas.canvas.mpl_connect('motion_notify_event', self.on_mouseMotion)
+        self.ui.canvas.canvas.mpl_connect('motion_notify_event', self.on_mouse_motion)
+        self.ui.canvas.canvas.mpl_connect('resize_event', self.on_resize_event)
         
         # Interaction operation
         self.connect(self.ui.pushButton_intoPickMode, QtCore.SIGNAL('clicked()'),
@@ -109,6 +112,10 @@ class MainAppNDim(QtGui.QMainWindow):
         
         self.connect(self.ui.pushButton_cancelInteractMode, QtCore.SIGNAL('clicked()'),
                      self.do_leave_interact_mode)
+
+        # Class variables
+        self._currMouseXPos = 0.
+        self._currMouseYPos = 0.
 
         return
     
@@ -163,7 +170,7 @@ class MainAppNDim(QtGui.QMainWindow):
 
         picker_id = str(self.ui.comboBox_indicators.currentText())
         dx = float(self.ui.lineEdit_step.text())
-        self.ui.canvas.move_picker_horizontal(picker_id, dx)
+        self.ui.canvas.move_indicator_horizontal(picker_id, -dx)
 
         return
         
@@ -171,8 +178,13 @@ class MainAppNDim(QtGui.QMainWindow):
         """ Move picker line left by 1 step 
         """
         if self._interactMode != GraphInteractMode.SELECTPOINTMID:
-            raise NotImplementedError('Must be in state SELECTPOINTMID')        
-        
+            raise NotImplementedError('Must be in state SELECTPOINTMID')
+
+        picker_id = str(self.ui.comboBox_indicators.currentText())
+        dx = float(self.ui.lineEdit_step.text())
+        self.ui.canvas.move_indicator_horizontal(picker_id, dx)
+
+        return
 
     def doChangeLastLine(self):
         """ Change the color and value of last line
@@ -390,7 +402,7 @@ class MainAppNDim(QtGui.QMainWindow):
 
         return
 
-    def on_mousePressEvent(self, event):
+    def on_mouse_press_event(self, event):
         """ Respond to pick up a value with mouse down event if it is on MplGraphicsView's canvas
         Definition of button_press_event is:
           button_press_event(x, y, button, dblclick=False, guiEvent=None)
@@ -412,6 +424,8 @@ class MainAppNDim(QtGui.QMainWindow):
 
         # In case of mouse is in the canvas' region
         if x is not None and y is not None:
+            self._currMouseXPos = x
+            self._currMouseYPos = y
             if button == 1:
                 msg = "You've pressed on canvas with coords:\n %f, %f\n and button %d" % (x, y, button)
                 print "Button 1: ", msg
@@ -455,16 +469,44 @@ class MainAppNDim(QtGui.QMainWindow):
             self._do_add_picker(x, y)
         elif self._interactMode == GraphInteractMode.SELECTPOINTMID:
             self._do_move_picker(x, y)          
-        
-      
-        
 
-    def on_mouseMotion(self, event):
+    def on_mouse_motion(self, event):
+        """ Event handling in case mouse is moving
         """
-        """
-        # print "Mouse is moving to ", event.xdata, event.ydata
+        new_x = event.xdata
+        new_y = event.ydata
+
+        if new_x is None or new_y is None:
+            return
+
+        if abs(new_x - self._currMouseXPos) > MOUSE_RESOLUTION \
+                or abs(new_y - self._currMouseYPos) > MOUSE_RESOLUTION:
+            # Should do something if mouse is moved beyond insensitive range
+            if self._mouseStatus == MouseStatus.PRESSED:
+                # only respond as the mouse's left button is pressed
+                print 'Mouse is pressed. Position = %.2f, %.2f' % (new_x, new_y)
+
+                if self._interactMode == GraphInteractMode.SELECTPOINTMID:
+                    dx = new_x - self._currMouseXPos
+                    picker_id = str(self.ui.comboBox_indicators.currentText())
+                    self.ui.canvas.move_indicator_horizontal(picker_id, dx)
+
+
+            # Update
+            self._currMouseXPos = new_x
+            self._currMouseYPos = new_y
 
         return
+
+    def on_resize_event(self, event):
+        """ What if size is changed
+        """
+        min_x, max_x = self.ui.canvas.getXLimit()
+        min_y, max_y = self.ui.canvas.getYLimit()
+
+        print 'Canvas resized to X = (%.3f, %.3f) Y = (%.3f, %.3f)' % (
+            min_x, max_x, min_y, max_y
+        )
 
 
     def addSomething(self):

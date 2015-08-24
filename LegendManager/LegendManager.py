@@ -146,7 +146,7 @@ class LegendManager(QtGui.QMainWindow):
                     selrow.append(row)
             except AttributeError:
                 #case where rows have been deleted and nothing do check or do
-                print "unexpected case"
+                print ("unexpected case")
         
         #show selected labels
         Nshow=len(selrow)

@@ -244,7 +244,7 @@ class Qt4MplCanvas(FigureCanvas):
         if len(r) == 1: 
             self._lineDict[self._lineIndex] = r[0]
         else:
-            print "Impoooooooooooooooosible!"
+            print("Impoooooooooooooooosible!")
         self._lineIndex += 1
 
         # Flush/commit
@@ -388,11 +388,11 @@ class Qt4MplCanvas(FigureCanvas):
         """
         # self._lineDict[ikey].remove()
         lines = self.axes.lines
-        print str(type(lines)), lines
-        print "ikey = ", ikey, self._lineDict[ikey]
+        print(str(type(lines)), lines)
+        print("ikey = ", ikey, self._lineDict[ikey])
         self.axes.lines.remove(self._lineDict[ikey])
         #self.axes.remove(self._lineDict[ikey])
-        print self._lineDict[ikey]
+        print(self._lineDict[ikey])
         self._lineDict[ikey] = None
 
         return
@@ -491,8 +491,6 @@ class Qt4MplCanvas(FigureCanvas):
 
         handles, labels = self.axes.get_legend_handles_labels()
         self.axes.legend(handles, labels, loc='best')    
-        print handles
-        print labels
         #self.axes.legend(self._myLegendHandlers, self._myLegentLabels)
 
         return

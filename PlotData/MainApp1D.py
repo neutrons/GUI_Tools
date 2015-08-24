@@ -92,11 +92,11 @@ class MainApp1D(QtGui.QWidget):
             line = line.strip()
             if len(line) == 0:
                 continue
-            print "Parse: ", line
+            print("Parse: ", line)
 
             terms = line.split(",")
             if len(terms) != 4: 
-                print "Unsupported.. must be : y=f(x), xmin, dx, xmax"
+                print("Unsupported.. must be : y=f(x), xmin, dx, xmax")
 
             equation = terms[0].strip()
             if equation.count('=') > 0:
@@ -112,7 +112,7 @@ class MainApp1D(QtGui.QWidget):
             for i in xrange(len(vecx)):
                 x = vecx[i]
                 vecy[i] = eval(equation)
-                print x, vecy[i]
+                print(x, vecy[i])
 
             break
         # ENDFOR
@@ -139,11 +139,11 @@ class MainApp1D(QtGui.QWidget):
             line = line.strip()
             if len(line) == 0:
                 continue
-            print "Parse: ", line
+            print("Parse: ", line)
 
             terms = line.split(",")
             if len(terms) != 4: 
-                print "Unsupported.. must be : y=f(x), xmin, dx, xmax"
+                print("Unsupported.. must be : y=f(x), xmin, dx, xmax")
 
             equation = terms[0].strip()
             if equation.count('=') > 0:
@@ -158,11 +158,11 @@ class MainApp1D(QtGui.QWidget):
             #print "vecx: ", vecx
             #print "vecy: ", vecy
 
-            print "Size of X = %d" % (len(vecx))
+            print("Size of X = %d" % (len(vecx)))
             for i in xrange(len(vecx)):
                 x = vecx[i]
                 vecy[i] = eval(equation)
-                print x, vecy[i]
+                print(x, vecy[i])
 
             self.ui_canvas.addPlot(vecx, vecy)
         # ENDFOR

@@ -199,7 +199,7 @@ class MainApp1Dextent(QtGui.QWidget):
                 vecy[i] = eval(equation)
                 print x, vecy[i]
 
-            self.ui_canvas.addPlot(vecx, vecy, label="y=%s"%(equation))
+            self.ui_canvas.add_plot_1d(vecx, vecy, label="y=%s"%(equation))
         # ENDFOR
 
         # Draw !

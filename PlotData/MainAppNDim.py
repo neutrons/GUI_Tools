@@ -92,10 +92,10 @@ class MainAppNDim(QtGui.QMainWindow):
         self.ui.comboBox_marker.addItems(self.ui.canvas.getLineMarkerList())
 
         # define event handlers for matplotlib canvas
-        self.ui.canvas.canvas.mpl_connect('button_press_event', self.on_mouse_press_event)
-        self.ui.canvas.canvas.mpl_connect('button_release_event', self.on_mouseReleaseEvent)
-        self.ui.canvas.canvas.mpl_connect('motion_notify_event', self.on_mouse_motion)
-        self.ui.canvas.canvas.mpl_connect('resize_event', self.on_resize_event)
+        self.ui.canvas._myCanvas.mpl_connect('button_press_event', self.on_mouse_press_event)
+        self.ui.canvas._myCanvas.mpl_connect('button_release_event', self.on_mouseReleaseEvent)
+        self.ui.canvas._myCanvas.mpl_connect('motion_notify_event', self.on_mouse_motion)
+        self.ui.canvas._myCanvas.mpl_connect('resize_event', self.on_resize_event)
         
         # Interaction operation
         self.connect(self.ui.pushButton_intoPickMode, QtCore.SIGNAL('clicked()'),
@@ -436,6 +436,7 @@ class MainAppNDim(QtGui.QMainWindow):
                 # right click of mouse will pop up a context-menu
                 self.ui.menu = QtGui.QMenu(self) 
 
+                """
                 addAction = QtGui.QAction('Add', self) 
                 addAction.triggered.connect(self.addSomething) 
                 self.ui.menu.addAction(addAction)
@@ -446,6 +447,7 @@ class MainAppNDim(QtGui.QMainWindow):
                 
                 # add other required actions 
                 self.ui.menu.popup(QtGui.QCursor.pos())
+                """
 
         return
     

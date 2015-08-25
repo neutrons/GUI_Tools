@@ -5,7 +5,7 @@ import numpy as np
 from PyQt4 import QtGui
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar2
 from matplotlib.figure import Figure
 import matplotlib.image
 
@@ -107,6 +107,13 @@ class IndicatorManager(object):
         """
         return '--'
 
+    def get_live_indicator_ids(self):
+        """
+
+        :return:
+        """
+        return sorted(self._lineManager.keys())
+
     def get_marker(self, line_id=None):
         """
 
@@ -153,6 +160,25 @@ class IndicatorManager(object):
 
         return
 
+    def update_indicators_range(self, x_range, y_range):
+        """
+        Update indicator's range
+        :param x_range:
+        :param y_range:
+        :return:
+        """
+        for i_id in self._lineManager.keys():
+            # FIXME - Need a new flag for direction of the indicating line, vertical or horizontal
+            if True:
+                self._lineManager[i_id][1][0] = y_range[0]
+                self._lineManager[i_id][1][-1] = y_range[1]
+            else:
+                self._lineManager[i_id][0][0] = x_range[0]
+                self._lineManager[i_id][0][-1] = x_range[1]
+
+        return
+
+
 class MplGraphicsView(QtGui.QWidget):
     """ A combined graphics view including matplotlib canvas and
     a navigation tool bar
@@ -166,13 +192,13 @@ class MplGraphicsView(QtGui.QWidget):
         QtGui.QWidget.__init__(self, parent)
 
         # set up canvas
-        self.canvas = Qt4MplCanvas(self)
-        self.toolbar = MyNavigationToolbar(self.canvas, self.canvas)
+        self._myCanvas = Qt4MplCanvas(self)
+        self._myToolBar = MyNavigationToolbar(self, self._myCanvas)
 
         # set up layout
-        self.vbox = QtGui.QVBoxLayout(self)
-        self.vbox.addWidget(self.canvas)
-        self.vbox.addWidget(self.toolbar)
+        self._vBox = QtGui.QVBoxLayout(self)
+        self._vBox.addWidget(self._myCanvas)
+        self._vBox.addWidget(self._myToolBar)
 
         # auto line's maker+color list
         self._myLineMarkerColorList = []
@@ -191,7 +217,7 @@ class MplGraphicsView(QtGui.QWidget):
                     marker=None, line_style=None, line_width=1):
         """ Add a new plot
         """
-        self.canvas.add_plot_1d(vec_x, vec_y, y_err, color, label, x_label, y_label, marker, line_style, line_width)
+        self._myCanvas.add_plot_1d(vec_x, vec_y, y_err, color, label, x_label, y_label, marker, line_style, line_width)
 
         #self.canvas.addPlotY2(x, y*100)
         #self.canvas.addPlotY2([0, 1, 2], [50, 30, 15])
@@ -201,11 +227,11 @@ class MplGraphicsView(QtGui.QWidget):
     def addHorizontalIndicator(self, y, color):
         """ Add an indicator line
         """
-        xmin, xmax = self.canvas.getXLimit()
+        xmin, xmax = self._myCanvas.getXLimit()
         vecx = numpy.array([xmin, xmax])
         vecy = numpy.array([y, y])
 
-        self._indicatorKey = self.canvas.add_plot_1d(vecx, vecy, color, line_style='--')
+        self._indicatorKey = self._myCanvas.add_plot_1d(vecx, vecy, color, line_style='--')
 
         return
 
@@ -218,12 +244,12 @@ class MplGraphicsView(QtGui.QWidget):
         """
         # For indicator line's position
         if x is None:
-            x_min, x_max = self.canvas.getXLimit()
+            x_min, x_max = self._myCanvas.getXLimit()
             x = (x_min + x_max) * 0.5
         else:
             assert isinstance(x, float)
 
-        y_min, y_max = self.canvas.getYLimit()
+        y_min, y_max = self._myCanvas.getYLimit()
 
         # For color
         if color is None:
@@ -235,7 +261,7 @@ class MplGraphicsView(QtGui.QWidget):
         my_id = self._myIndicatorsManager.add_vertical_indicator(x, y_min, y_max, color)
         vec_x, vec_y = self._myIndicatorsManager.get_data(my_id)
 
-        canvas_line_index = self.canvas.add_plot_1d(vec_x=vec_x, vec_y=vec_y,
+        canvas_line_index = self._myCanvas.add_plot_1d(vec_x=vec_x, vec_y=vec_y,
                                                     color=color, marker=self._myIndicatorsManager.get_marker(),
                                                     line_style=self._myIndicatorsManager.get_line_style(),
                                                     line_width=2)
@@ -255,7 +281,7 @@ class MplGraphicsView(QtGui.QWidget):
         :param y_tick_label:
         :return:
         """
-        self.canvas.addPlot2D(array2d, x_min, x_max, y_min, y_max, hold_prev_image, y_tick_label)
+        self._myCanvas.addPlot2D(array2d, x_min, x_max, y_min, y_max, hold_prev_image, y_tick_label)
 
         return
 
@@ -267,7 +293,7 @@ class MplGraphicsView(QtGui.QWidget):
         if os.path.exists(imagefilename) is False:
             raise NotImplementedError("Image file %s does not exist." % (imagefilename))
 
-        self.canvas.addImage(imagefilename)
+        self._myCanvas.addImage(imagefilename)
 
         return
 
@@ -275,37 +301,54 @@ class MplGraphicsView(QtGui.QWidget):
     def clear_all_lines(self):
         """
         """
-        self.canvas.clear_all_1d_plots()
+        self._myCanvas.clear_all_1d_plots()
 
     def clear_canvas(self):
         """ Clear canvas
         """
-        return self.canvas.clear_canvas()
+        return self._myCanvas.clear_canvas()
 
     def draw(self):
         """ Draw to commit the change
         """
-        return self.canvas.draw()
+        return self._myCanvas.draw()
+
+    def evt_view_updated(self):
+        """ Event handling as canvas size updated
+        :return:
+        """
+        # update the indicator
+        new_x_range = self.getXLimit()
+        new_y_range = self.getYLimit()
+
+        self._myIndicatorsManager.update_indicators_range(new_x_range, new_y_range)
+        for indicator_key in self._myIndicatorsManager.get_live_indicator_ids():
+            canvas_line_id = self._myIndicatorsManager.get_canvas_line_index(indicator_key)
+            data_x, data_y = self._myIndicatorsManager.get_data(indicator_key)
+            self.updateLine(canvas_line_id, data_x, data_y)
+        # END-FOR
+
+        return
 
     def getPlot(self):
         """
         """
-        return self.canvas.getPlot()
+        return self._myCanvas.getPlot()
 
     def getLastPlotIndexKey(self):
         """ Get ...
         """
-        return self.canvas.getLastPlotIndexKey()
+        return self._myCanvas.getLastPlotIndexKey()
 
     def getXLimit(self):
         """ Get limit of Y-axis
         """
-        return self.canvas.getXLimit()
+        return self._myCanvas.getXLimit()
 
     def getYLimit(self):
         """ Get limit of Y-axis
         """
-        return self.canvas.getYLimit()
+        return self._myCanvas.getYLimit()
 
     def move_indicator_horizontal(self, line_id, dx):
         """
@@ -317,24 +360,24 @@ class MplGraphicsView(QtGui.QWidget):
         canvas_line_index = self._myIndicatorsManager.get_canvas_line_index(line_id)
         self._myIndicatorsManager.shift(line_id, dx=dx, dy=0)
         vec_x, vec_y = self._myIndicatorsManager.get_data(line_id)
-        self.canvas.updateLine(ikey=canvas_line_index, vecx=vec_x, vecy=vec_y)
+        self._myCanvas.updateLine(ikey=canvas_line_index, vecx=vec_x, vecy=vec_y)
 
         return
 
     def removePlot(self, ikey):
         """
         """
-        return self.canvas.removePlot(ikey)
+        return self._myCanvas.removePlot(ikey)
 
     def setXYLimits(self, xmin=None, xmax=None, ymin=None, ymax=None):
         """
         """
-        return self.canvas.setXYLimit(xmin, xmax, ymin, ymax)
+        return self._myCanvas.setXYLimit(xmin, xmax, ymin, ymax)
 
     def updateLine(self, ikey, vecx, vecy, linestyle=None, linecolor=None, marker=None, markercolor=None):
         """
         """
-        return self.canvas.updateLine(ikey, vecx, vecy, linestyle, linecolor, marker, markercolor)
+        return self._myCanvas.updateLine(ikey, vecx, vecy, linestyle, linecolor, marker, markercolor)
 
     def getLineStyleList(self):
         """
@@ -356,7 +399,7 @@ class MplGraphicsView(QtGui.QWidget):
         """ Get a list of line/marker color and marker style combination
         as default to add more and more line to plot
         """
-        return self.canvas.getDefaultColorMarkerComboList()
+        return self._myCanvas.getDefaultColorMarkerComboList()
 
     def getNextLineMarkerColorCombo(self):
         """ As auto line's marker and color combo list is used,
@@ -385,10 +428,10 @@ class MplGraphicsView(QtGui.QWidget):
     def setXYLimit(self, xmin, xmax, ymin, ymax):
         """ Set X-Y limit automatically
         """
-        self.canvas.axes.set_xlim([xmin, xmax])
-        self.canvas.axes.set_ylim([ymin, ymax])
+        self._myCanvas.axes.set_xlim([xmin, xmax])
+        self._myCanvas.axes.set_ylim([ymin, ymax])
 
-        self.canvas.draw()
+        self._myCanvas.draw()
 
         return
 
@@ -818,7 +861,6 @@ class Qt4MplCanvas(FigureCanvas):
 
         return combolist
 
-
     def _flush(self):
         """ A dirty hack to flush the image
         """
@@ -827,7 +869,6 @@ class Qt4MplCanvas(FigureCanvas):
         self.resize(w,h)
 
         return
-
 
     def _setupLegend(self, location='best'):
         """ Set up legend
@@ -859,26 +900,92 @@ class Qt4MplCanvas(FigureCanvas):
 
         return
 
+# END-OF-CLASS (MplGraphicsView)
 
 
-class MyNavigationToolbar(NavigationToolbar):
+class MyNavigationToolbar(NavigationToolbar2):
     """ A customized navigation tool bar attached to canvas
+    Note:
+    * home, left, right: will not disable zoom/pan mode
+    * zoom and pan: will turn on/off both's mode
+
+    Other methods
+    * drag_pan(self, event): event handling method for dragging canvas in pan-mode
     """
+    NAVIGATION_MODE_NONE = 0
+    NAVIGATION_MODE_PAN = 1
+    NAVIGATION_MODE_ZOOM = 2
+
     def __init__(self, parent, canvas):
         """ Initialization
-        FUTURE: direction='h'
         """
-        self.canvas = canvas
-        QtGui.QWidget.__init__(self, parent)
+        NavigationToolbar2.__init__(self, canvas, canvas)
 
-        #if direction=='h' :
-        #    self.layout = QtGui.QHBoxLayout(self)
-        #else :
-        #    self.layout = QtGui.QVBoxLayout(self)
-
-        #self.layout.setMargin(2)
-        #self.layout.setSpacing(0)
-
-        NavigationToolbar.__init__( self, canvas, canvas )
+        self._myParent = parent
+        self._navigationMode = MyNavigationToolbar.NAVIGATION_MODE_NONE
 
         return
+
+    def get_mode(self):
+        """
+        :return: integer as none/pan/zoom mode
+        """
+        return self._navigationMode
+
+    # Overriding base's methods
+    def draw(self):
+        """
+        Canvas is drawn called by pan(), zoom()
+        :return:
+        """
+        NavigationToolbar2.draw(self)
+
+        self._myParent.evt_view_updated()
+
+        return
+
+    def pan(self, *args):
+        """
+
+        :param args:
+        :return:
+        """
+        NavigationToolbar2.pan(self, args)
+
+        if self._navigationMode == MyNavigationToolbar.NAVIGATION_MODE_PAN:
+            # out of pan mode
+            self._navigationMode = MyNavigationToolbar.NAVIGATION_MODE_NONE
+        else:
+            # into pan mode
+            self._navigationMode = MyNavigationToolbar.NAVIGATION_MODE_PAN
+
+        return
+
+    def zoom(self, *args):
+        """
+        Turn on/off zoom (zoom button)
+        :param args:
+        :return:
+        """
+        NavigationToolbar2.zoom(self, args)
+
+        if self._navigationMode == MyNavigationToolbar.NAVIGATION_MODE_ZOOM:
+            # out of zoom mode
+            self._navigationMode = MyNavigationToolbar.NAVIGATION_MODE_NONE
+        else:
+            # into zoom mode
+            self._navigationMode = MyNavigationToolbar.NAVIGATION_MODE_ZOOM
+
+        return
+
+    def _update_view(self):
+        """
+        view update called by home(), back() and forward()
+        :return:
+        """
+        NavigationToolbar2._update_view(self)
+
+        self._myParent.evt_view_updated()
+
+        return
+

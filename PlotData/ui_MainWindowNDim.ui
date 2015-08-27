@@ -52,6 +52,31 @@
            </widget>
           </item>
           <item>
+           <widget class="QComboBox" name="comboBox_pickerType">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>Horizontal</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Vertical</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>2-Way</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer_6">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>

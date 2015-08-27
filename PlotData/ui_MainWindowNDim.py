@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_MainWindowNDim.ui'
 #
-# Created: Thu Aug 20 16:01:19 2015
+# Created: Thu Aug 27 10:50:08 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -54,6 +54,13 @@ class Ui_MainWindow(object):
         self.pushButton_addPickupLine = QtGui.QPushButton(self.centralwidget)
         self.pushButton_addPickupLine.setObjectName(_fromUtf8("pushButton_addPickupLine"))
         self.horizontalLayout_9.addWidget(self.pushButton_addPickupLine)
+        self.comboBox_pickerType = QtGui.QComboBox(self.centralwidget)
+        self.comboBox_pickerType.setMinimumSize(QtCore.QSize(100, 0))
+        self.comboBox_pickerType.setObjectName(_fromUtf8("comboBox_pickerType"))
+        self.comboBox_pickerType.addItem(_fromUtf8(""))
+        self.comboBox_pickerType.addItem(_fromUtf8(""))
+        self.comboBox_pickerType.addItem(_fromUtf8(""))
+        self.horizontalLayout_9.addWidget(self.comboBox_pickerType)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_9.addItem(spacerItem)
         self.comboBox_indicators = QtGui.QComboBox(self.centralwidget)
@@ -326,6 +333,9 @@ class Ui_MainWindow(object):
         self.pushButton_intoPickMode.setToolTip(_translate("MainWindow", "<html><head/><body><p>Pick mode: </p><p>1. Add a picker / Select a picker</p><p>2. Press mouse\'s left button to move it left and right or up and down;</p><p>3. Release mouse\'s button the stop moving the indicator line;</p></body></html>", None))
         self.pushButton_intoPickMode.setText(_translate("MainWindow", "Pick Mode", None))
         self.pushButton_addPickupLine.setText(_translate("MainWindow", "Add PIcker", None))
+        self.comboBox_pickerType.setItemText(0, _translate("MainWindow", "Horizontal", None))
+        self.comboBox_pickerType.setItemText(1, _translate("MainWindow", "Vertical", None))
+        self.comboBox_pickerType.setItemText(2, _translate("MainWindow", "2-Way", None))
         self.pushButton_select.setText(_translate("MainWindow", "Select", None))
         self.pushButton_moveLeft.setText(_translate("MainWindow", "Move Left", None))
         self.lineEdit_step.setToolTip(_translate("MainWindow", "<html><head/><body><p>Step for moving cursor</p></body></html>", None))

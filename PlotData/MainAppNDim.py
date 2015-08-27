@@ -122,12 +122,22 @@ class MainAppNDim(QtGui.QMainWindow):
     def do_add_picker(self):
         """ Decide to add the picker 
         """
+        # Check mode
         if self._interactMode != GraphInteractMode.SELECTPOINTNEW:
             raise NotImplementedError('Interaction mode must be SELECTPOINTNEW.')
         else:
             self._interactMode = GraphInteractMode.SELECTPOINTMID
 
-        indicator_id = self.ui.canvas.add_vertical_indicator()
+        # ID
+        indicator_type = str(self.ui.comboBox_pickerType.currentText())
+        if indicator_type == 'Horizontal':
+            indicator_id = self.ui.canvas.add_horizontal_indicator()
+        elif indicator_type == 'Vertical':
+            indicator_id = self.ui.canvas.add_vertical_indicator()
+        elif indicator_type == '2-Way':
+            indicator_id = self.ui.canvas.add_2way_indicator()
+        else:
+            raise RuntimeError('Unable to support indicator of type %s.' % indicator_type)
 
         # Update comboBox for message
         self.ui.comboBox_indicators.addItem(QtCore.QString(indicator_id))
@@ -170,7 +180,7 @@ class MainAppNDim(QtGui.QMainWindow):
 
         picker_id = str(self.ui.comboBox_indicators.currentText())
         dx = float(self.ui.lineEdit_step.text())
-        self.ui.canvas.move_indicator_horizontal(picker_id, -dx)
+        self.ui.canvas.move_indicator(picker_id, -dx, 0)
 
         return
         
@@ -182,7 +192,7 @@ class MainAppNDim(QtGui.QMainWindow):
 
         picker_id = str(self.ui.comboBox_indicators.currentText())
         dx = float(self.ui.lineEdit_step.text())
-        self.ui.canvas.move_indicator_horizontal(picker_id, dx)
+        self.ui.canvas.move_indicator(picker_id, dx, 0)
 
         return
 
@@ -297,10 +307,13 @@ class MainAppNDim(QtGui.QMainWindow):
 
         return
 
-
     def doPlot(self):
         """ Plot
         """
+        # Default
+        if str(self.ui.lineEdit_formular.text()) == '':
+            self.ui.lineEdit_formular.setText('y=sin(x), 0, 0.1, 10.')
+
         # parse input
         linelist = str(self.ui.lineEdit_formular.text()).split(";")
         for line in linelist:
@@ -490,8 +503,9 @@ class MainAppNDim(QtGui.QMainWindow):
 
                 if self._interactMode == GraphInteractMode.SELECTPOINTMID:
                     dx = new_x - self._currMouseXPos
+                    dy = new_y - self._currMouseYPos
                     picker_id = str(self.ui.comboBox_indicators.currentText())
-                    self.ui.canvas.move_indicator_horizontal(picker_id, dx)
+                    self.ui.canvas.move_indicator(picker_id, dx, dy)
 
 
             # Update
@@ -531,7 +545,7 @@ class MainAppNDim(QtGui.QMainWindow):
         """ Pick add a picker line 
         """
         # Plot 2 new lines dashed and etc. 
-        self.ui.canvas.addHorizontalIndicator(y, 'blue')
+        self.ui.canvas.add_horizontal_indicator(y, 'blue')
         
     def _do_move_picker(self, x, y):
         """ Move the picker line

@@ -109,6 +109,8 @@ class MainAppNDim(QtGui.QMainWindow):
                      self.do_move_picker_right)
         self.connect(self.ui.pushButton_select, QtCore.SIGNAL('clicked()'),
                      self.do_add_picker)
+        self.connect(self.ui.pushButton_deleteIndicator, QtCore.SIGNAL('clicked()'),
+                     self.do_delete_picker)
         
         self.connect(self.ui.pushButton_cancelInteractMode, QtCore.SIGNAL('clicked()'),
                      self.do_leave_interact_mode)
@@ -143,6 +145,21 @@ class MainAppNDim(QtGui.QMainWindow):
         self.ui.comboBox_indicators.addItem(QtCore.QString(indicator_id))
         size = self.ui.comboBox_indicators.count()
         self.ui.comboBox_indicators.setCurrentIndex(size-1)
+
+        return
+
+    def do_delete_picker(self):
+        """ Delete indicator
+        :return:
+        """
+        # Get indicator ID
+        indicator_id = str(self.ui.comboBox_indicators.currentText()).strip()
+        print 'Indicator with id %s is selected' % indicator_id
+
+        self.ui.canvas.remove_indicator(indicator_id)
+
+        current_index = self.ui.comboBox_indicators.currentIndex()
+        self.ui.comboBox_indicators.removeItem(current_index)
 
         return
     

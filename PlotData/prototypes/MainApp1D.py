@@ -75,7 +75,7 @@ class MainApp1D(QtGui.QWidget):
         """ Delete last added line
         """
         ikey = self.ui_canvas.getLastPlotIndexKey()
-        self.ui_canvas.removePlot(ikey)
+        self.ui_canvas.remove_plot_1d(ikey)
         self.ui_canvas.draw()
 
         return

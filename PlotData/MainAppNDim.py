@@ -108,7 +108,7 @@ class MainAppNDim(QtGui.QMainWindow):
         self.connect(self.ui.pushButton_moveRight, QtCore.SIGNAL('clicked()'),
                      self.do_move_picker_right)
         self.connect(self.ui.pushButton_select, QtCore.SIGNAL('clicked()'),
-                     self.do_add_picker)
+                     self.do_select_picker)
         self.connect(self.ui.pushButton_deleteIndicator, QtCore.SIGNAL('clicked()'),
                      self.do_delete_picker)
         
@@ -429,6 +429,17 @@ class MainAppNDim(QtGui.QMainWindow):
             maxy = None
 
         self.ui.canvas.setXYLimits(minx, maxx, miny, maxy)
+
+        return
+
+    def do_select_picker(self):
+        """
+        Select a picker
+        :return:
+        """
+        picker_id = str(self.ui.comboBox_indicators.currentText())
+        position = self.ui.canvas.get_indicator_position(picker_id)
+        print 'Indicator\'s position is %.5f' % position
 
         return
 

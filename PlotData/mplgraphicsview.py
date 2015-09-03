@@ -178,6 +178,7 @@ class IndicatorManager(object):
         :param line_id:
         :return:
         """
+        # TODO Doc
         return self._lineManager[line_id][0], self._lineManager[line_id][1]
 
     def get_line_style(self, line_id=None):
@@ -425,7 +426,7 @@ class MplGraphicsView(QtGui.QWidget):
         Add a vertical indicator line
         :param x: None as the automatic mode using default from middle of canvas
         :param color: None as the automatic mode using default
-        :return:
+        :return: indicator ID
         """
         # For indicator line's position
         if x is None:
@@ -586,6 +587,17 @@ class MplGraphicsView(QtGui.QWidget):
         """
         """
         return self._myCanvas.updateLine(ikey, vecx, vecy, linestyle, linecolor, marker, markercolor)
+
+    def get_indicator_position(self, indicator_key):
+        """ Get position (x or y) of the indicator
+        :return:
+        """
+        # TODO - Consider a better and more consistent return
+        vec_x, vec_y = self._myIndicatorsManager.get_data(indicator_key)
+        if vec_x[0] == vec_x[1]:
+            return vec_x[0]
+
+        return vec_y[0]
 
     def getLineStyleList(self):
         """

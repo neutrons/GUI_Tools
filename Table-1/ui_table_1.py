@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui_table_1.ui'
 #
-# Created: Wed Jan 28 16:21:52 2015
-#      by: PyQt4 UI code generator 4.8.3
+# Created: Tue Sep  8 12:10:01 2015
+#      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -35,8 +44,6 @@ class Ui_MainWindow(object):
         self.tableWidgetTable1.setRowCount(10)
         self.tableWidgetTable1.setColumnCount(5)
         self.tableWidgetTable1.setObjectName(_fromUtf8("tableWidgetTable1"))
-        self.tableWidgetTable1.setColumnCount(5)
-        self.tableWidgetTable1.setRowCount(10)
         self.horizontalLayout.addWidget(self.tableWidgetTable1)
         self.groupBox = QtGui.QGroupBox(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
@@ -103,17 +110,17 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "PyQt Table Example", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Table Controls", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButtonSelectAll.setText(QtGui.QApplication.translate("MainWindow", "Select All", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButtonDeSelectAll.setText(QtGui.QApplication.translate("MainWindow", "De-Select All", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButtonRemoveEmptyRows.setText(QtGui.QApplication.translate("MainWindow", "Remove Empty Rows", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButtonDeleteSelectedRows.setText(QtGui.QApplication.translate("MainWindow", "Delete Selected Row(s)", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButtonAddRows.setText(QtGui.QApplication.translate("MainWindow", "Add Row(s)", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButtonMoveRowsUp.setText(QtGui.QApplication.translate("MainWindow", "Move Selected Row(s) Up", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButtonMoveRowsDown.setText(QtGui.QApplication.translate("MainWindow", "Move Selected Row(s) Down", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(_translate("MainWindow", "PyQt Table Example", None))
+        self.groupBox.setTitle(_translate("MainWindow", "Table Controls", None))
+        self.pushButtonSelectAll.setText(_translate("MainWindow", "Select All", None))
+        self.pushButtonDeSelectAll.setText(_translate("MainWindow", "De-Select All", None))
+        self.pushButtonRemoveEmptyRows.setText(_translate("MainWindow", "Remove Empty Rows", None))
+        self.pushButtonDeleteSelectedRows.setText(_translate("MainWindow", "Delete Selected Row(s)", None))
+        self.pushButtonAddRows.setText(_translate("MainWindow", "Add Row(s)", None))
+        self.pushButtonMoveRowsUp.setText(_translate("MainWindow", "Move Selected Row(s) Up", None))
+        self.pushButtonMoveRowsDown.setText(_translate("MainWindow", "Move Selected Row(s) Down", None))
+        self.menuFile.setTitle(_translate("MainWindow", "File", None))
+        self.menuHelp.setTitle(_translate("MainWindow", "Help", None))
+        self.actionExit.setText(_translate("MainWindow", "Exit", None))
+        self.actionAbout.setText(_translate("MainWindow", "About", None))
 

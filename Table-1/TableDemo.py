@@ -49,6 +49,12 @@ class DemoTableWindow(QtGui.QMainWindow):
         self.connect(self.ui.pushButton_appendRow, QtCore.SIGNAL('clicked()'),
                      self.do_append_row)
 
+        self.connect(self.ui.pushButton_info, QtCore.SIGNAL('clicked()'),
+                     self.do_show_info)
+
+        self.connect(self.ui.pushButton_delRow, QtCore.SIGNAL('clicked()'),
+                     self.do_delete_row)
+
         self._columnTypeList = list()
 
         return
@@ -70,6 +76,30 @@ class DemoTableWindow(QtGui.QMainWindow):
 
         return
 
+    def do_delete_row(self):
+        """
+
+        :return:
+        """
+        # Find the row to delete
+        """
+        rows_list = list()
+        index_status = self._columnTypeList.index('checkbox')
+        for i_row in xrange(self.ui.tableWidget_main.rowCount()):
+            is_checked = self.ui.tableWidget_main.get_row_value(i_row)[index_status]
+            if is_checked:
+                rows_list.append(i_row)
+        """
+        rows_list = self.ui.tableWidget_main.get_selected_rows()
+        print rows_list
+
+        rows_list = sorted(rows_list, reverse=True)
+
+        for i_row in rows_list:
+            self.ui.tableWidget_main.removeRow(i_row)
+
+        return
+
     def do_init_table(self):
         """
         Init table
@@ -88,6 +118,39 @@ class DemoTableWindow(QtGui.QMainWindow):
             self._columnTypeList.append(col_type)
 
         self.ui.tableWidget_main.init_setup(column_tup_list)
+
+        return
+
+    def do_show_info(self):
+        """ Gather information and show
+        :return:
+        """
+        num_rows = self.ui.tableWidget_main.rowCount()
+
+        for i_row in xrange(num_rows):
+
+            value_list = self.ui.tableWidget_main.get_row_value(i_row)
+            print 'Row %d: ' % i_row, value_list
+
+            for j_col in xrange(len(self._columnTypeList)):
+                pass
+
+                """
+                if self._columnTypeList[j_col] == 'checkbox':
+                    # Check box
+                    cell_i_j = self.ui.tableWidget_main.cellWidget(i_row, j_col)
+                    assert isinstance(cell_i_j, QtGui.QCheckBox)
+                    is_checked = cell_i_j.isChecked()
+                    print is_checked
+                else:
+                    # Regular cell
+                    item_i_j = self.ui.tableWidget_main.item(i_row, j_col)
+                    assert isinstance(item_i_j, QtGui.QTableWidgetItem)
+                    value = str(item_i_j.text())
+                    print value
+                """
+            # END-FOR
+        # END-FOR
 
         return
 

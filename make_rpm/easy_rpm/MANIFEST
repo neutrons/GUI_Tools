@@ -1,0 +1,8 @@
+MANIFEST.in
+README
+compile_gui.pl
+setup.py
+my_addition/__init__.py
+my_addition/add.py
+my_addition/main.py
+scripts/my_add

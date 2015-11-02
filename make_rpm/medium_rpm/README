@@ -1,0 +1,7 @@
+this simple project will be used to learn how to make an RPM
+
+documentation found here:
+https://docs.python.org/3.4/distutils/introduction.html#concepts-terminology
+
+# to make the RPM
+> python setup.py bdist_rpm

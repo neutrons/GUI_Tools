@@ -1,0 +1,35 @@
+To make a simple tar file 
+
+the setup.py file must look like this
+
+'''
+from distutils.core import setup
+
+setup(name = 'my_addition',
+      scripts=['scripts/my_addition'],
+      version = '1.0',
+      author = 'Jean Bilheux',
+      packages = ['code','scripts'])
+'''
+
+and then
+> python setup.py sdist
+
+
+To make a RPM file
+> python setup.py bdist_rpm
+
+To install RPM (as sudo)
+> cd dist/
+> rpm -ivh my_addition-1.0-1.noarch.rpm
+
+To run the program
+> cd /usr/bin
+> my_add
+Sum of 5.0000 and 6.0000 is 11.0000
+
+To remove installed RPM (as sudo)
+> rpm -ev my_addition-1.0-1.noarch
+
+
+

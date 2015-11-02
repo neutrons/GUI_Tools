@@ -1,0 +1,11 @@
+MANIFEST.in
+README
+compile_gui.pl
+setup.py
+code/__init__.py
+code/main_window_interface.py
+code/run_me_using_3qthread.py
+code/thread/__init__.py
+code/thread/thread_class_method1.py
+designer/__init__.py
+designer/main_window_interface.ui

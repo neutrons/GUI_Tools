@@ -1,5 +1,7 @@
 include compile_gui.pl
 include MANIFEST.in
-include code/thread/*.py
+include my_thread/thread/*.py
 include designer/*.ui
-include code/*.py
+include my_thread/*.py
+include scripts/run_me
+include README

@@ -1,10 +1,12 @@
+#!/usr/bin/env python
+
 import sys
 import os
 import time
 from PyQt4 import QtGui, QtCore, Qt
 
-from code.thread.thread_class_method1 import AThread
-from code.main_window_interface import Ui_MainWindow
+from my_thread.thread.thread_class_method1 import AThread
+from my_thread.main_window_interface import Ui_MainWindow
 
 
 #include this try/except block to remap QString needed when using IPython

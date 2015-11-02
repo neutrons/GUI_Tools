@@ -1,6 +1,8 @@
 from distutils.core import setup
 
-setup(name = 'make_rpm',
+setup(name = 'my_thread',
+      scripts=['scripts/run_me'],
       version = '1.0',
       author = 'Jean Bilheux',
-      packages = ['code','code.thread','designer'])
+      packages = ['my_thread','my_thread.thread'],
+      )

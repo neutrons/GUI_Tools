@@ -30,6 +30,3 @@ Sum of 5.0000 and 6.0000 is 11.0000
 
 To remove installed RPM (as sudo)
 > rpm -ev my_addition-1.0-1.noarch
-
-
-

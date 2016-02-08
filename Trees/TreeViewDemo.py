@@ -80,11 +80,8 @@ class TreeViewWindow(QtGui.QMainWindow):
         self.connect(self.ui.pushButton_getCurrentPath, QtCore.SIGNAL('clicked()'),
                      self.do_get_current_path)
 
-        # Mouse response
-        self.connect(self.ui.treeView_custom, QtCore.SIGNAL('itemDoubleClicked()'),
-                     self.evt_double_clicked)
-
         return
+
 
     def do_add_ipts(self):
         """
@@ -363,14 +360,6 @@ class TreeViewWindow(QtGui.QMainWindow):
 
         return
 
-    def evt_double_clicked(self):
-        """
-
-        :return:
-        """
-        print '[DB] Double clicked!!!'
-
-        return
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

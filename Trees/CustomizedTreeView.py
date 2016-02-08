@@ -292,7 +292,4 @@ class CustomizedTreeView(QtGui.QTreeView):
 
         return
 
-    def mouseDoubleClickEvent(self, e):
-        """
-        """
-        print "double clicked"
+

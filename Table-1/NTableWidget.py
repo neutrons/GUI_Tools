@@ -12,8 +12,7 @@ except AttributeError:
 
 class NTableWidget(QtGui.QTableWidget):
     """
-    NdavTableWidget inherits from QTableWidget by extending the features
-    for easy application.
+    NdavTableWidget inherits from QTableWidget
     """
     def __init__(self, parent):
         """

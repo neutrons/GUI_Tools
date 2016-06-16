@@ -1,0 +1,6 @@
+include compile_gui.pl
+include MANIFEST.in
+include code/*.py
+include code/thread/*.py
+include scripts/my_add
+include README

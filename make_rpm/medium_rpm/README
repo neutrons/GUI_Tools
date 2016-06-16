@@ -1,0 +1,18 @@
+this simple project will be used to learn how to make an RPM
+
+documentation found here:
+https://docs.python.org/3.4/distutils/introduction.html#concepts-terminology
+
+# to make the RPM
+> python setup.py bdist_rpm
+
+To install the RPM (be sudo)
+> cd dist/
+> rpm -ivh thread-1.0-1.noarch.rpm
+
+To run the program
+> my_add
+scripts has been installed in /usr/bin
+
+To remove installed RPM (as sudo)
+> rpm -ev thread-1.0-1.noarch

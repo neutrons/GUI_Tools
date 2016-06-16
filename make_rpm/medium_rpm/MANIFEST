@@ -1,0 +1,10 @@
+MANIFEST.in
+README
+compile_gui.pl
+setup.py
+designer/main_window_interface.ui
+my_thread/__init__.py
+my_thread/main_window_interface.py
+my_thread/thread/__init__.py
+my_thread/thread/thread_class_method1.py
+scripts/run_me

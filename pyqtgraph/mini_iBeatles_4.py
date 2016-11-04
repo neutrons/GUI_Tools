@@ -29,8 +29,8 @@ def update_bottom_plot():
         _sum_data = np.sum(_data[y0:y1, x0:x1])
         bragg_edge.append(_sum_data)
 
-    bottom_plot_widget.clear()
-    bottom_plot_widget.plot(bragg_edge)
+    bottom_plot.clear()
+    bottom_plot.plot(bragg_edge)
 
 #    print("Region from ({},{}) to ({},{})".format(x0,y0,x1,y1))
 
@@ -58,32 +58,41 @@ app = QtGui.QApplication([])
 win = QtGui.QMainWindow()
 win.resize(800, 800)
 win.setWindowTitle('My iBeatles examples')
-#top_widget = QtGui.QWidget()
-top_widget = pg.GraphicsLayoutWidget()
+main_widget = pg.GraphicsLayoutWidget()
 
 # make plot prettier
 pg.setConfigOptions(antialias=True)
 
+p1 = main_widget.addPlot()
+img = pg.ImageItem()
+p1.addItem(img)
 
-win.setCentralWidget(top_widget)
-I = QtGui.QVBoxLayout()
-top_widget.setLayout(I)
 
-# top pyqtgraph plot
-top_plot = pg.ImageView(name='top_plot')
-top_plot.ui.roiBtn.hide()
-top_plot.ui.menuBtn.hide()
-top_plot.setImage(data)
-I.addWidget(top_plot)
-roi = pg.ROI([50, 50], [200, 200])
-roi.addScaleHandle([1, 1], [0, 0])
-top_plot.addItem(roi)
-roi.sigRegionChanged.connect(update_bottom_plot)
 
-# bottom plot
-bottom_plot_widget = pg.PlotWidget()
-bottom_plot_widget.plot()
-I.addWidget(bottom_plot_widget)
+
+
+
+
+#win.setCentralWidget(top_widget)
+#I = QtGui.QVBoxLayout()
+#top_widget.setLayout(I)
+
+## top pyqtgraph plot
+#top_plot = pg.ImageView(name='top_plot')
+#top_plot.ui.roiBtn.hide()
+#top_plot.ui.menuBtn.hide()
+#top_plot.setImage(data)
+#I.addWidget(top_plot)
+#roi = pg.ROI([50, 50], [200, 200])
+#roi.addScaleHandle([1, 1], [0, 0])
+#top_plot.addItem(roi)
+#roi.sigRegionChanged.connect(update_bottom_plot)
+
+## bottom plot
+##bottom_plot = pg.plot()
+##I.addWidget(bottom_plot)
+
+
 
 
 win.show()
